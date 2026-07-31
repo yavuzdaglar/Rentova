@@ -1,0 +1,103 @@
+@using System.Collections.Generic
+@{
+    var activeTab = ViewBag.ActiveTab ?? "overview";
+}
+
+<aside id="adminSidebar" class="w-full md:w-72 bg-zinc-950 border-r border-zinc-800 p-8 flex flex-col">
+    <div class="mb-12">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-500">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m6 2a8 8 0 11-16 0 8 8 0 0116 0zm-6 12a4 4 0 110-8 4 4 0 010 8z"></path>
+                </svg>
+            </div>
+            <div>
+                <div class="text-2xl font-display font-black tracking-tighter text-white leading-none">RENTOVA</div>
+                <div class="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.2em] mt-1">Admin Panel</div>
+            </div>
+        </div>
+    </div>
+
+    <nav id="adminSidebarNav" class="flex-1 space-y-2">
+        @{
+            var menuItems = new List<dynamic> {
+                new { id = "overview", label = "Genel Bakis", icon = "dashboard" },
+                new { id = "bookings", label = "Rezervasyonlar", icon = "bookings" },
+                new { id = "messages", label = "Mesaj Yonetimi", icon = "messages" },
+                new { id = "fleet", label = "Arac Filosu", icon = "car" },
+                new { id = "features", label = "Ozellikler", icon = "features" },
+                new { id = "featured", label = "One Cikanlar", icon = "featured" },
+                new { id = "admins", label = "Adminler", icon = "admins" }
+            };
+        }
+        
+        @foreach(var item in menuItems) {
+            <form method="GET" action="@Url.Action("AdminPanel", "Admin")" class="admin-tab-form" style="display:inline;">
+                <input type="hidden" name="tab" value="@item.id">
+                <button type="submit" data-admin-tab="@item.id" class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-sm font-bold transition-all duration-300 @(activeTab == item.id ? "bg-zinc-900 text-emerald-500 border border-zinc-800 shadow-2xl shadow-emerald-500/5" : "text-zinc-500 hover:text-zinc-100 hover:bg-zinc-900/50")">
+                    @if(item.icon == "dashboard") {
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"></path>
+                        </svg>
+                    } else if(item.icon == "bookings") {
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    } else if(item.icon == "messages") {
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h8m-8 4h5m-9 6l2.5-2.5A2 2 0 016.914 17H19a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2h1"></path>
+                        </svg>
+                    } else if(item.icon == "car") {
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 13l1-2h16l1 2m-1 0v5a1 1 0 01-1 1h-1m-14 0H4a1 1 0 01-1-1v-5m18 0l-1.293-3.293a1 1 0 00-.894-.707H5.187a1 1 0 00-.894.707L3 13m3 6v-2m12 2v-2"></path>
+                        </svg>
+                    } else if(item.icon == "featured") {
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.284 3.95a1 1 0 00.95.69h4.154c.969 0 1.371 1.24.588 1.81l-3.36 2.442a1 1 0 00-.364 1.118l1.284 3.95c.3.921-.755 1.688-1.539 1.118l-3.36-2.442a1 1 0 00-1.176 0l-3.36 2.442c-.783.57-1.838-.197-1.539-1.118l1.284-3.95a1 1 0 00-.364-1.118L2.92 9.377c-.783-.57-.38-1.81.588-1.81h4.154a1 1 0 00.95-.69l1.284-3.95z"></path>
+                        </svg>
+                    } else if(item.icon == "features") {
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M7 12h10M10 18h4"></path>
+                        </svg>
+                    } else {
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12c2.761 0 5-2.239 5-5S14.761 2 12 2 7 4.239 7 7s2.239 5 5 5zm0 2c-3.866 0-7 2.239-7 5v1h14v-1c0-2.761-3.134-5-7-5z"></path>
+                        </svg>
+                    }
+                    @item.label
+                </button>
+            </form>
+        }
+        
+        <div class="pt-6 mt-6 border-t border-zinc-800 space-y-2">
+            <form method="GET" action="@Url.Action("AdminPanel", "Admin")" class="admin-tab-form" style="display:inline;">
+                <input type="hidden" name="tab" value="add-car">
+                <button type="submit" data-admin-tab="add-car" class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-xs font-bold transition-all border border-dashed @(activeTab == "add-car" ? "bg-emerald-500 text-black border-emerald-500" : "text-zinc-400 border-zinc-800 hover:bg-zinc-900 hover:text-white")">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Araç Ekle
+                </button>
+            </form>
+            
+            <form method="GET" action="@Url.Action("AdminPanel", "Admin")" class="admin-tab-form" style="display:inline;">
+                <input type="hidden" name="tab" value="add-brand">
+                <button type="submit" data-admin-tab="add-brand" class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-xs font-bold transition-all border border-dashed @(activeTab == "add-brand" ? "bg-emerald-500 text-black border-emerald-500" : "text-zinc-400 border-zinc-800 hover:bg-zinc-900 hover:text-white")">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Marka Ekle
+                </button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="mt-auto pt-8 border-t border-zinc-800 space-y-4">
+        <a href="@Url.Action("Index", "Main")" class="w-full flex items-center gap-4 px-6 py-4 text-sm font-bold text-red-500 hover:bg-red-500/10 rounded-2xl transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            Çıkış Yap
+        </a>
+    </div>
+</aside>

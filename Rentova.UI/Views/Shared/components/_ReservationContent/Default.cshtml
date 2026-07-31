@@ -1,0 +1,182 @@
+@using System.Globalization
+@using System.Text.Json
+@using Rentova.UI.Models
+@model ReservationPageViewModel
+
+@if (Model.Car == null)
+{
+    <section class="pt-32 pb-20 px-6 max-w-4xl mx-auto">
+        <div class="bg-white border border-brand-gray/20 rounded-[2rem] p-10 text-center">
+            <h2 class="text-3xl font-display font-bold mb-3">Araç Bulunamadı</h2>
+            <p class="text-brand-anthracite/70 mb-8">Rezervasyon için uygun araç bilgisi alınamadı. Lütfen filodan bir araç seçip tekrar deneyin.</p>
+            <a href="/Product" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-brand-black text-white font-medium hover:bg-brand-anthracite transition-all">
+                Filoya Dön
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
+            </a>
+        </div>
+    </section>
+}
+else
+{
+    var brandName = (Model.Car.BrandName ?? string.Empty).Trim();
+    var brandLogoUrl = (Model.Car.BrandImageUrl ?? string.Empty).Trim();
+
+    var reservations = Model.Reservations.Select(x => new
+    {
+        startDate = x.StartDate.ToString("yyyy-MM-dd"),
+        endDate = x.EndDate.ToString("yyyy-MM-dd")
+    });
+    var reservationsJson = JsonSerializer.Serialize(reservations);
+
+    <section id="reservationPage"
+             class="pt-32 pb-10 px-6"
+             data-car-id="@Model.Car.CarId"
+             data-daily-price="@Model.Car.DailyPrice.ToString(CultureInfo.InvariantCulture)">
+
+        <script id="reservedRangesData" type="application/json">@Html.Raw(reservationsJson)</script>
+
+        <div class="max-w-7xl mx-auto space-y-12">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="relative rounded-[3rem] overflow-hidden shadow-xl border border-white">
+                    <img src="@Model.Car.CarImage"
+                         alt="@Model.Car.CarModel"
+                         class="w-full h-full object-cover aspect-video lg:aspect-square"
+                         referrerpolicy="no-referrer"
+                         onerror="this.src='https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=1200'" />
+                </div>
+
+                <div class="flex flex-col justify-start space-y-8">
+                    <div class="flex items-start gap-4 md:gap-6">
+                        @if (!string.IsNullOrWhiteSpace(brandLogoUrl))
+                        {
+                            <div class="shrink-0 rounded-3xl bg-white border border-brand-gray/10 p-2 md:p-3 shadow-sm">
+                                <img src="@brandLogoUrl"
+                                     alt="@brandName logosu"
+                                     class="w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36 object-contain"
+                                     onerror="this.parentElement.style.display='none';" />
+                            </div>
+                        }
+
+                        <div class="pt-1">
+                            <p class="text-sm font-bold text-brand-anthracite/40 uppercase tracking-[0.3em] mb-2">@brandName</p>
+                            <h1 class="text-4xl md:text-5xl font-display font-bold text-brand-black">@Model.Car.CarModel</h1>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-3xl border border-brand-gray/10 flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-brand-light flex items-center justify-center text-brand-black">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold text-brand-anthracite/40 uppercase tracking-widest">Vites</p>
+                                <p class="font-bold text-brand-black">@Model.Car.TransmissionTypeName</p>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-3xl border border-brand-gray/10 flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-brand-light flex items-center justify-center text-brand-black">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22L17 22L17 11L13 7L13 2L4 2L4 7L3 11L3 22Z" /><path d="M13 11L17 11" /><path d="M4 11L8 11" /></svg>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold text-brand-anthracite/40 uppercase tracking-widest">Yakıt</p>
+                                <p class="font-bold text-brand-black">@Model.Car.FuelTypeName</p>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-3xl border border-brand-gray/10 flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-brand-light flex items-center justify-center text-brand-black">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold text-brand-anthracite/40 uppercase tracking-widest">Kapasite</p>
+                                <p class="font-bold text-brand-black">@Model.Car.SeatCountName Kişi</p>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-3xl border border-brand-gray/10 flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-brand-light flex items-center justify-center text-brand-black">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" /></svg>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold text-brand-anthracite/40 uppercase tracking-widest">Günlük</p>
+                                <p class="font-bold text-brand-black">@Model.Car.DailyPrice.ToString("N0") TL</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[3rem] p-8 md:p-12 shadow-xl border border-brand-gray/10">
+                <div class="mb-3 text-center">
+                    <p id="reservationMessage" class="text-sm font-semibold h-5"></p>
+                </div>
+
+                <div class="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <h2 class="text-3xl font-display font-bold text-brand-black">Rezervasyon Takvimi</h2>
+
+                    <div class="flex items-center gap-4 bg-brand-light p-2 rounded-2xl border border-brand-gray/10">
+                        <button id="reservationPrevMonth" class="p-2 hover:bg-white rounded-xl transition-all" type="button">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6" /></svg>
+                        </button>
+                        <span id="reservationCurrentMonth" class="min-w-[180px] text-center font-bold uppercase tracking-widest text-sm"></span>
+                        <button id="reservationNextMonth" class="p-2 hover:bg-white rounded-xl transition-all" type="button">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6" /></svg>
+                        </button>
+                    </div>
+
+                    <div class="flex gap-6">
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded-full bg-emerald-500"></div>
+                            <span class="text-xs font-bold text-brand-anthracite/60 uppercase tracking-widest">Seçili</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded-full bg-brand-gray/30"></div>
+                            <span class="text-xs font-bold text-brand-anthracite/60 uppercase tracking-widest">Dolu</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-7 gap-2 mb-2">
+                    @foreach (var dayName in new[] { "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz" })
+                    {
+                        <div class="text-center py-2 text-[10px] font-bold text-brand-anthracite/30 uppercase tracking-widest">@dayName</div>
+                    }
+                </div>
+
+                <div id="reservationCalendarDays" class="grid grid-cols-7 gap-2 mb-12"></div>
+
+                <div class="pt-10 border-t border-brand-gray/10 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-bold text-brand-anthracite/40 uppercase tracking-[0.2em]">Başlangıç Tarihi</p>
+                        <p id="reservationStartDate" class="text-xl font-display font-bold text-brand-black">Seçilmedi</p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-bold text-brand-anthracite/40 uppercase tracking-[0.2em]">Bitiş Tarihi</p>
+                        <p id="reservationEndDate" class="text-xl font-display font-bold text-brand-black">Seçilmedi</p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-bold text-brand-anthracite/40 uppercase tracking-[0.2em]">Toplam Süre</p>
+                        <p id="reservationTotalDays" class="text-xl font-display font-bold text-brand-black">0 Gün</p>
+                    </div>
+                </div>
+
+                <div class="mt-12 p-8 bg-brand-black rounded-[2rem] flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="text-center md:text-left">
+                        <p class="text-white/40 text-xs font-bold uppercase tracking-[0.3em] mb-1">Ödeme Özeti</p>
+                        <p id="reservationPaymentLine" class="text-white text-sm">Günlük @Model.Car.DailyPrice.ToString("N0") TL × 0 Gün</p>
+                    </div>
+                    <div class="flex items-center gap-8">
+                        <div class="text-right">
+                            <p class="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-1">Toplam Tutar</p>
+                            <p id="reservationTotalPrice" class="text-4xl font-display font-bold text-white">0 TL</p>
+                        </div>
+                        <button id="reservationSubmitBtn"
+                                class="px-10 py-5 bg-emerald-500 text-white rounded-2xl font-bold hover:bg-emerald-400 transition-all shadow-xl shadow-emerald-500/20 disabled:bg-brand-gray disabled:text-brand-anthracite/70 disabled:cursor-not-allowed disabled:shadow-none"
+                                type="button"
+                                disabled>
+                            Hemen Rezerve Et
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}

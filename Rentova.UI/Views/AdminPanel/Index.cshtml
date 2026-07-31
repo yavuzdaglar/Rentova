@@ -1,0 +1,114 @@
+@using System.Collections.Generic
+@model dynamic
+
+@{
+    ViewBag.Title = "Admin Panel";
+    var activeTab = ViewBag.ActiveTab ?? "overview";
+    var mockBookings = ViewBag.MockBookings ?? new List<dynamic>();
+    var mockFleet = ViewBag.MockFleet ?? new List<dynamic>();
+    var mockAdminMessages = ViewBag.MockAdminMessages ?? new List<dynamic>();
+    var admins = ViewBag.Admins ?? new List<dynamic>();
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+                        display: ["Space Grotesk", "sans-serif"]
+                    }
+                }
+            }
+        };
+    </script>
+    <link rel="stylesheet" href="~/css/admin-panel.css">
+</head>
+<body class="bg-zinc-950">
+    <div id="adminPanelApp" class="flex h-screen bg-zinc-950">
+        <!-- Sidebar -->
+        <div id="adminSidebarMount">
+            <partial name="~/Views/Shared/components/_AdminPanelSidebar/Default.cshtml" />
+        </div>
+        
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="bg-zinc-950 border-b border-zinc-800 px-8 py-6 flex items-center justify-between">
+                <h1 id="adminHeaderTitle" class="text-2xl font-display font-black text-white">
+                    @{
+                        switch(activeTab) {
+                            case "overview": <text>Genel Bakış</text>; break;
+                            case "bookings": <text>Rezervasyonlar</text>; break;
+                            case "messages": <text>Mesaj Yönetimi</text>; break;
+                            case "fleet": <text>Araç Filosu</text>; break;
+                            case "featured": <text>Öne Çıkanlar</text>; break;
+                            case "features": <text>Özellikler</text>; break;
+                            case "admins": <text>Adminler</text>; break;
+                            case "add-car": <text>Araç Ekle</text>; break;
+                            case "add-brand": <text>Marka Ekle</text>; break;
+                            default: <text>Admin Panel</text>; break;
+                        }
+                    }
+                </h1>
+            </header>
+
+            <!-- Content Area -->
+            <div id="adminContentArea" class="flex-1 overflow-auto p-8">
+                <!-- Overview Tab -->
+                @if(activeTab == "overview") {
+                    <partial name="~/Views/Shared/components/_AdminPanelOverview/Default.cshtml" />
+                }
+
+                <!-- Bookings Tab -->
+                @if(activeTab == "bookings") {
+                    <partial name="~/Views/Shared/components/_AdminPanelBookings/Default.cshtml" />
+                }
+
+                <!-- Messages Tab -->
+                @if(activeTab == "messages") {
+                    <partial name="~/Views/Shared/components/_AdminPanelMessages/Default.cshtml" />
+                }
+
+                <!-- Fleet Tab -->
+                @if(activeTab == "fleet") {
+                    <partial name="~/Views/Shared/components/_AdminPanelFleet/Default.cshtml" />
+                }
+
+                <!-- Featured Tab -->
+                @if(activeTab == "featured") {
+                    <partial name="~/Views/Shared/components/_AdminPanelFeatured/Default.cshtml" />
+                }
+
+                <!-- Features Tab -->
+                @if(activeTab == "features") {
+                    <partial name="~/Views/Shared/components/_AdminPanelFeatures/Default.cshtml" />
+                }
+
+                <!-- Admins Tab -->
+                @if(activeTab == "admins") {
+                    <partial name="~/Views/Shared/components/_AdminPanelAdmins/Default.cshtml" />
+                }
+
+                <!-- Add Car Tab -->
+                @if(activeTab == "add-car") {
+                    <partial name="~/Views/Shared/components/_AdminPanelCarForm/Default.cshtml" />
+                }
+
+                <!-- Add Brand Tab -->
+                @if(activeTab == "add-brand") {
+                    <partial name="~/Views/Shared/components/_AdminPanelBrandForm/Default.cshtml" />
+                }
+            </div>
+        </main>
+    </div>
+    <script src="~/js/admin-panel.js"></script>
+</body>
+</html>

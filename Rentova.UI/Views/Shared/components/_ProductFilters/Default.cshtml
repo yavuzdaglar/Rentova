@@ -1,0 +1,136 @@
+@model Rentova.UI.Models.ProductViewModel
+
+<div class="space-y-8 mb-16">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+        <h2 class="text-sm font-bold uppercase tracking-widest text-brand-anthracite/40 flex items-center gap-2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            Filtreleme Seçenekleri
+        </h2>
+        <button id="resetFiltersBtn" class="text-xs font-bold uppercase tracking-widest text-brand-black hover:underline transition-all">
+            Filtreleri Temizle
+        </button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        @* Marka *@
+        <div class="space-y-3 relative filter-select" data-label="Marka">
+            <label class="text-xs font-bold text-brand-anthracite/60 uppercase tracking-wider">Marka</label>
+            <button class="w-full bg-brand-light border border-brand-gray/30 rounded-2xl px-4 py-3 text-sm font-medium outline-none focus:border-brand-black transition-all flex items-center justify-between group">
+                <span class="text-brand-anthracite/40">Hepsi</span>
+                <svg class="transition-transform duration-300" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="filter-dropdown hidden absolute z-50 top-full left-0 right-0 mt-2 bg-white border border-brand-gray/30 rounded-2xl shadow-2xl overflow-hidden">
+                <div class="p-3 border-b border-brand-gray/10">
+                    <div class="relative">
+                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-brand-anthracite/30" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" placeholder="Marka ara..." class="w-full bg-brand-light border border-brand-gray/20 rounded-xl py-2 pl-9 pr-3 text-xs outline-none focus:border-brand-black transition-all dropdown-search" />
+                    </div>
+                </div>
+                <div class="max-h-60 overflow-y-auto no-scrollbar options-container">
+                    <button class="w-full text-left px-4 py-3 text-sm transition-colors hover:bg-brand-light text-brand-anthracite/70 option-btn" data-value="Hepsi">Hepsi</button>
+                    @foreach (var brand in Model.Brands)
+                    {
+                        <button class="w-full text-left px-4 py-3 text-sm transition-colors hover:bg-brand-light text-brand-anthracite/70 option-btn" data-value="@brand.BrandName">@brand.BrandName</button>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @* Kategori *@
+        <div class="space-y-3 relative filter-select" data-label="Kategori">
+            <label class="text-xs font-bold text-brand-anthracite/60 uppercase tracking-wider">Kategori</label>
+            <button class="w-full bg-brand-light border border-brand-gray/30 rounded-2xl px-4 py-3 text-sm font-medium outline-none focus:border-brand-black transition-all flex items-center justify-between group">
+                <span class="text-brand-anthracite/40">Hepsi</span>
+                <svg class="transition-transform duration-300" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="filter-dropdown hidden absolute z-50 top-full left-0 right-0 mt-2 bg-white border border-brand-gray/30 rounded-2xl shadow-2xl overflow-hidden">
+                <div class="p-3 border-b border-brand-gray/10">
+                    <div class="relative">
+                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-brand-anthracite/30" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" placeholder="Kategori ara..." class="w-full bg-brand-light border border-brand-gray/20 rounded-xl py-2 pl-9 pr-3 text-xs outline-none focus:border-brand-black transition-all dropdown-search" />
+                    </div>
+                </div>
+                <div class="max-h-60 overflow-y-auto no-scrollbar options-container">
+                    <button class="w-full text-left px-4 py-3 text-sm transition-colors hover:bg-brand-light text-brand-anthracite/70 option-btn" data-value="Hepsi">Hepsi</button>
+                    @foreach (var type in Model.VehicleTypes)
+                    {
+                        <button class="w-full text-left px-4 py-3 text-sm transition-colors hover:bg-brand-light text-brand-anthracite/70 option-btn" data-value="@type.VehicleTypeName">@type.VehicleTypeName</button>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @* Vites Türü *@
+        <div class="space-y-3 relative filter-select" data-label="Vites Türü">
+            <label class="text-xs font-bold text-brand-anthracite/60 uppercase tracking-wider">Vites Türü</label>
+            <button class="w-full bg-brand-light border border-brand-gray/30 rounded-2xl px-4 py-3 text-sm font-medium outline-none focus:border-brand-black transition-all flex items-center justify-between group">
+                <span class="text-brand-anthracite/40">Hepsi</span>
+                <svg class="transition-transform duration-300" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="filter-dropdown hidden absolute z-50 top-full left-0 right-0 mt-2 bg-white border border-brand-gray/30 rounded-2xl shadow-2xl overflow-hidden">
+                <div class="p-3 border-b border-brand-gray/10">
+                    <div class="relative">
+                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-brand-anthracite/30" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" placeholder="Vites ara..." class="w-full bg-brand-light border border-brand-gray/20 rounded-xl py-2 pl-9 pr-3 text-xs outline-none focus:border-brand-black transition-all dropdown-search" />
+                    </div>
+                </div>
+                <div class="max-h-60 overflow-y-auto no-scrollbar options-container">
+                    <button class="w-full text-left px-4 py-3 text-sm transition-colors hover:bg-brand-light text-brand-anthracite/70 option-btn" data-value="Hepsi">Hepsi</button>
+                    @foreach (var trans in Model.TransmissionTypes)
+                    {
+                        <button class="w-full text-left px-4 py-3 text-sm transition-colors hover:bg-brand-light text-brand-anthracite/70 option-btn" data-value="@trans.TransmissionTypeName">@trans.TransmissionTypeName</button>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @* Yakıt Türü *@
+        <div class="space-y-3 relative filter-select" data-label="Yakıt Türü">
+            <label class="text-xs font-bold text-brand-anthracite/60 uppercase tracking-wider">Yakıt Türü</label>
+            <button class="w-full bg-brand-light border border-brand-gray/30 rounded-2xl px-4 py-3 text-sm font-medium outline-none focus:border-brand-black transition-all flex items-center justify-between group">
+                <span class="text-brand-anthracite/40">Hepsi</span>
+                <svg class="transition-transform duration-300" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="filter-dropdown hidden absolute z-50 top-full left-0 right-0 mt-2 bg-white border border-brand-gray/30 rounded-2xl shadow-2xl overflow-hidden">
+                <div class="p-3 border-b border-brand-gray/10">
+                    <div class="relative">
+                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-brand-anthracite/30" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" placeholder="Yakıt ara..." class="w-full bg-brand-light border border-brand-gray/20 rounded-xl py-2 pl-9 pr-3 text-xs outline-none focus:border-brand-black transition-all dropdown-search" />
+                    </div>
+                </div>
+                <div class="max-h-60 overflow-y-auto no-scrollbar options-container">
+                    <button class="w-full text-left px-4 py-3 text-sm transition-colors hover:bg-brand-light text-brand-anthracite/70 option-btn" data-value="Hepsi">Hepsi</button>
+                    @foreach (var fuel in Model.FuelTypes)
+                    {
+                        <button class="w-full text-left px-4 py-3 text-sm transition-colors hover:bg-brand-light text-brand-anthracite/70 option-btn" data-value="@fuel.FuelTypeName">@fuel.FuelTypeName</button>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @* Koltuk Sayısı *@
+        <div class="space-y-3 relative filter-select" data-label="Koltuk Sayısı">
+            <label class="text-xs font-bold text-brand-anthracite/60 uppercase tracking-wider">Koltuk Sayısı</label>
+            <button class="w-full bg-brand-light border border-brand-gray/30 rounded-2xl px-4 py-3 text-sm font-medium outline-none focus:border-brand-black transition-all flex items-center justify-between group">
+                <span class="text-brand-anthracite/40">Hepsi</span>
+                <svg class="transition-transform duration-300" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="filter-dropdown hidden absolute z-50 top-full left-0 right-0 mt-2 bg-white border border-brand-gray/30 rounded-2xl shadow-2xl overflow-hidden">
+                <div class="p-3 border-b border-brand-gray/10">
+                    <div class="relative">
+                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-brand-anthracite/30" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" placeholder="Koltuk ara..." class="w-full bg-brand-light border border-brand-gray/20 rounded-xl py-2 pl-9 pr-3 text-xs outline-none focus:border-brand-black transition-all dropdown-search" />
+                    </div>
+                </div>
+                <div class="max-h-60 overflow-y-auto no-scrollbar options-container">
+                    <button class="w-full text-left px-4 py-3 text-sm transition-colors hover:bg-brand-light text-brand-anthracite/70 option-btn" data-value="Hepsi">Hepsi</button>
+                    @foreach (var seat in Model.SeatCounts)
+                    {
+                        <button class="w-full text-left px-4 py-3 text-sm transition-colors hover:bg-brand-light text-brand-anthracite/70 option-btn" data-value="@seat.SeatCountName">@seat.SeatCountName Koltuk</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

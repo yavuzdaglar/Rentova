@@ -1,0 +1,40 @@
+@using Rentova.UI.Dtos.BrandDtos
+@model List<BrandGetAllDto>
+
+<section id="brands" class="py-32 bg-white overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6 mb-16">
+        <h2 class="text-5xl md:text-6xl font-display font-bold leading-tight text-center">
+            MARKALARIMIZ
+        </h2>
+    </div>
+    
+    <div class="relative flex overflow-hidden hover-pause">
+        <div class="flex animate-marquee gap-12 py-4">
+            @if (Model != null && Model.Any())
+            {
+                // Markalar için de dinamik tekrar sayısı: en az 20 kutu olacak şekilde
+                int brandRepeatCount = (int)Math.Max(2, Math.Ceiling(20.0 / Model.Count));
+                
+                for (int i = 0; i < brandRepeatCount; i++)
+                {
+                    foreach(var brand in Model) {
+                        <div class="flex-shrink-0 w-40 h-40 bg-brand-light rounded-[2.5rem] border border-brand-gray/20 flex items-center justify-center p-8 hover:bg-brand-gray transition-all duration-500 overflow-hidden">
+                            @if (!string.IsNullOrEmpty(brand.ImageUrl))
+                            {
+                                <img src="@brand.ImageUrl" alt="@brand.BrandName" class="max-w-full max-h-full object-contain grayscale hover:grayscale-0 transition-all duration-500" />
+                            }
+                            else
+                            {
+                                <span class="font-display font-bold text-brand-anthracite/20">@brand.BrandName</span>
+                            }
+                        </div>
+                    }
+                }
+            }
+            else
+            {
+                <p class="text-center w-full text-brand-anthracite/40">Marka bulunamadı.</p>
+            }
+        </div>
+    </div>
+</section>

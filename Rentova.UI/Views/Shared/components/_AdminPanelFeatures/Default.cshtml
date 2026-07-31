@@ -1,0 +1,111 @@
+@using System.Collections.Generic
+@{
+    var fuelOptions = ViewBag.FuelOptions ?? new List<dynamic>();
+    var seatOptions = ViewBag.SeatOptions ?? new List<dynamic>();
+    var transmissionOptions = ViewBag.TransmissionOptions ?? new List<dynamic>();
+    var vehicleTypeOptions = ViewBag.VehicleTypeOptions ?? new List<dynamic>();
+}
+
+<div class="space-y-8">
+    <div class="bg-zinc-950 border border-zinc-800 rounded-[2rem] p-8">
+        <h3 class="text-xl font-display font-bold text-white">Ozellik Yonetimi</h3>
+        <p class="text-zinc-500 text-sm mt-2">Yakit, koltuk, vites ve arac tipi listelerini bu ekrandan ekle, guncelle ve sil.</p>
+    </div>
+
+    <section class="bg-zinc-950 border border-zinc-800 rounded-[2rem] p-6 space-y-4">
+        <h4 class="text-white text-lg font-bold">Ortak Guncelleme Alani</h4>
+        <p class="text-zinc-500 text-sm">Asagidan bir satirda Duzenle butonuna bas, sonra sadece isim alanindan kaydet.</p>
+        <form method="POST" action="@Url.Action("UpdateFeature", "Admin")" class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-3" id="featureCommonUpdateForm">
+            <input type="hidden" name="featureType" id="featureUpdateType" />
+            <input type="hidden" name="featureId" id="featureUpdateId" />
+            <input type="text" name="featureName" id="featureUpdateName" placeholder="Duzenle secip yeni ad yazin" class="bg-zinc-900 border border-zinc-800 rounded-xl py-3 px-4 text-sm text-white outline-none focus:border-emerald-500" required />
+            <button type="submit" class="px-5 py-3 rounded-xl bg-emerald-500 text-black text-xs font-bold uppercase tracking-widest">Guncelle</button>
+        </form>
+    </section>
+
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <section class="bg-zinc-950 border border-zinc-800 rounded-[2rem] p-6 space-y-5">
+            <h4 class="text-white text-lg font-bold">Yakit Tipleri</h4>
+            <form method="POST" action="@Url.Action("AddFuelType", "Admin")" class="flex gap-3">
+                <input type="text" name="fuelTypeName" placeholder="Yeni yakit tipi" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl py-3 px-4 text-sm text-white outline-none focus:border-emerald-500" />
+                <button type="submit" class="px-5 py-3 rounded-xl bg-emerald-500 text-black text-xs font-bold uppercase tracking-widest">Ekle</button>
+            </form>
+            <div class="space-y-2 max-h-80 overflow-auto pr-1">
+                @foreach (var item in fuelOptions)
+                {
+                    <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_96px_96px] gap-2 items-center">
+                        <div class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl py-2.5 px-3 text-sm text-white">@item.name</div>
+                        <button type="button" data-feature-edit-button="true" data-feature-type="fuel" data-feature-id="@item.id" data-feature-name="@item.name" class="w-full h-10 rounded-xl bg-zinc-800 text-zinc-200 text-xs font-bold text-center">Duzenle</button>
+                        <form method="POST" action="@Url.Action("DeleteFuelType", "Admin")" class="w-full">
+                            <input type="hidden" name="fuelTypeId" value="@item.id" />
+                            <button type="submit" class="w-full h-10 rounded-xl bg-red-500/20 text-red-300 text-xs font-bold text-center">Sil</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        </section>
+
+        <section class="bg-zinc-950 border border-zinc-800 rounded-[2rem] p-6 space-y-5">
+            <h4 class="text-white text-lg font-bold">Koltuk Sayilari</h4>
+            <form method="POST" action="@Url.Action("AddSeatCount", "Admin")" class="flex gap-3">
+                <input type="text" name="seatCountName" placeholder="Yeni koltuk sayisi" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl py-3 px-4 text-sm text-white outline-none focus:border-emerald-500" />
+                <button type="submit" class="px-5 py-3 rounded-xl bg-emerald-500 text-black text-xs font-bold uppercase tracking-widest">Ekle</button>
+            </form>
+            <div class="space-y-2 max-h-80 overflow-auto pr-1">
+                @foreach (var item in seatOptions)
+                {
+                    <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_96px_96px] gap-2 items-center">
+                        <div class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl py-2.5 px-3 text-sm text-white">@item.name</div>
+                        <button type="button" data-feature-edit-button="true" data-feature-type="seat" data-feature-id="@item.id" data-feature-name="@item.name" class="w-full h-10 rounded-xl bg-zinc-800 text-zinc-200 text-xs font-bold text-center">Duzenle</button>
+                        <form method="POST" action="@Url.Action("DeleteSeatCount", "Admin")" class="w-full">
+                            <input type="hidden" name="seatCountId" value="@item.id" />
+                            <button type="submit" class="w-full h-10 rounded-xl bg-red-500/20 text-red-300 text-xs font-bold text-center">Sil</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        </section>
+
+        <section class="bg-zinc-950 border border-zinc-800 rounded-[2rem] p-6 space-y-5">
+            <h4 class="text-white text-lg font-bold">Vites Turleri</h4>
+            <form method="POST" action="@Url.Action("AddTransmissionType", "Admin")" class="flex gap-3">
+                <input type="text" name="transmissionTypeName" placeholder="Yeni vites turu" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl py-3 px-4 text-sm text-white outline-none focus:border-emerald-500" />
+                <button type="submit" class="px-5 py-3 rounded-xl bg-emerald-500 text-black text-xs font-bold uppercase tracking-widest">Ekle</button>
+            </form>
+            <div class="space-y-2 max-h-80 overflow-auto pr-1">
+                @foreach (var item in transmissionOptions)
+                {
+                    <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_96px_96px] gap-2 items-center">
+                        <div class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl py-2.5 px-3 text-sm text-white">@item.name</div>
+                        <button type="button" data-feature-edit-button="true" data-feature-type="transmission" data-feature-id="@item.id" data-feature-name="@item.name" class="w-full h-10 rounded-xl bg-zinc-800 text-zinc-200 text-xs font-bold text-center">Duzenle</button>
+                        <form method="POST" action="@Url.Action("DeleteTransmissionType", "Admin")" class="w-full">
+                            <input type="hidden" name="transmissionTypeId" value="@item.id" />
+                            <button type="submit" class="w-full h-10 rounded-xl bg-red-500/20 text-red-300 text-xs font-bold text-center">Sil</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        </section>
+
+        <section class="bg-zinc-950 border border-zinc-800 rounded-[2rem] p-6 space-y-5">
+            <h4 class="text-white text-lg font-bold">Arac Tipleri</h4>
+            <form method="POST" action="@Url.Action("AddVehicleType", "Admin")" class="flex gap-3">
+                <input type="text" name="vehicleTypeName" placeholder="Yeni arac tipi" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl py-3 px-4 text-sm text-white outline-none focus:border-emerald-500" />
+                <button type="submit" class="px-5 py-3 rounded-xl bg-emerald-500 text-black text-xs font-bold uppercase tracking-widest">Ekle</button>
+            </form>
+            <div class="space-y-2 max-h-80 overflow-auto pr-1">
+                @foreach (var item in vehicleTypeOptions)
+                {
+                    <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_96px_96px] gap-2 items-center">
+                        <div class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl py-2.5 px-3 text-sm text-white">@item.name</div>
+                        <button type="button" data-feature-edit-button="true" data-feature-type="vehicle" data-feature-id="@item.id" data-feature-name="@item.name" class="w-full h-10 rounded-xl bg-zinc-800 text-zinc-200 text-xs font-bold text-center">Duzenle</button>
+                        <form method="POST" action="@Url.Action("DeleteVehicleType", "Admin")" class="w-full">
+                            <input type="hidden" name="vehicleTypeId" value="@item.id" />
+                            <button type="submit" class="w-full h-10 rounded-xl bg-red-500/20 text-red-300 text-xs font-bold text-center">Sil</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        </section>
+    </div>
+</div>

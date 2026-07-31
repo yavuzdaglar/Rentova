@@ -1,0 +1,51 @@
+#reservationPage {
+    position: relative;
+}
+
+#reservationPage::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 10% 20%, rgba(0, 0, 0, 0.04), transparent 35%),
+        radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.08), transparent 30%);
+}
+
+#reservationPage > div {
+    position: relative;
+    z-index: 1;
+}
+
+#reservationCalendarDays button {
+    transform: translateZ(0);
+}
+
+#reservationCalendarDays button:hover {
+    transform: translateY(-1px);
+}
+
+#reservationSubmitBtn {
+    letter-spacing: 0.02em;
+}
+
+#reservationSubmitBtn:disabled {
+    opacity: 0.75;
+}
+
+@media (max-width: 1024px) {
+    #reservationCurrentMonth {
+        min-width: 150px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    #reservationPage {
+        padding-top: 6.5rem;
+    }
+
+    #reservationTotalPrice {
+        font-size: 2rem;
+    }
+}

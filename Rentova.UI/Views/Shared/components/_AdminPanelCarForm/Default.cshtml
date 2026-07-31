@@ -1,0 +1,205 @@
+@using System.Collections.Generic
+@{
+    var editingCar = ViewBag.EditingCar as dynamic;
+    var brands = ViewBag.BrandOptions ?? new List<dynamic>();
+    var fuels = ViewBag.FuelOptions ?? new List<dynamic>();
+    var transmissions = ViewBag.TransmissionOptions ?? new List<dynamic>();
+    var seats = ViewBag.SeatOptions ?? new List<dynamic>();
+    var vehicleTypes = ViewBag.VehicleTypeOptions ?? new List<dynamic>();
+}
+
+<script>
+    function filterAdminOptions(containerId, query) {
+        const container = document.getElementById(containerId);
+        if (!container) {
+            return;
+        }
+
+        const normalized = (query || '').toLocaleLowerCase('tr-TR');
+        const options = container.querySelectorAll('[data-option-item]');
+
+        options.forEach((option) => {
+            const name = (option.getAttribute('data-option-name') || '').toLocaleLowerCase('tr-TR');
+            option.style.display = name.includes(normalized) ? '' : 'none';
+        });
+    }
+</script>
+
+<div class="max-w-4xl mx-auto bg-zinc-950 border border-zinc-800 rounded-[3rem] p-12">
+    <div class="flex items-center gap-6 mb-12">
+        <div class="w-16 h-16 rounded-3xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500">
+            @if(editingCar != null) {
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+            } else {
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m6 2a8 8 0 11-16 0 8 8 0 0116 0zm-6 12a4 4 0 110-8 4 4 0 010 8z"></path>
+                </svg>
+            }
+        </div>
+        <div>
+            <h2 class="text-3xl font-display font-black text-white">
+                @if(editingCar != null) { <text>Aracı Düzenle</text> } else { <text>Yeni Araç Ekle</text> }
+            </h2>
+            <p class="text-zinc-500 text-sm">
+                @if(editingCar != null) { <text>@editingCar.brand @editingCar.model aracını güncelliyorsunuz.</text> } else { <text>Filoya yeni bir araç dahil edin.</text> }
+            </p>
+        </div>
+    </div>
+
+    <form method="POST" action="@Url.Action("SaveCar", "Admin")" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        @if(editingCar != null) {
+            <input type="hidden" name="carId" value="@editingCar.id">
+        }
+        
+        <div class="space-y-2">
+            <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest ml-4">ARAÇ MODELİ</label>
+            <input type="text" name="model" value="@editingCar?.model" placeholder="Örn: Tesla Model S" 
+                class="w-full bg-zinc-900 border border-zinc-800 rounded-2xl py-4 px-6 text-sm text-white outline-none focus:border-emerald-500 transition-all" required />
+        </div>
+        
+        <div class="space-y-2">
+            <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest ml-4">GÜNLÜK FİYAT</label>
+            <input type="text" name="price" value="@(editingCar?.price?.ToString().Replace("TL", "").Trim())" placeholder="Örn: 2500"
+                class="w-full bg-zinc-900 border border-zinc-800 rounded-2xl py-4 px-6 text-sm text-white outline-none focus:border-emerald-500 transition-all" required />
+        </div>
+        
+        <div class="md:col-span-2 space-y-2">
+            <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest ml-4">ARAÇ GÖRSELİ (URL)</label>
+            <input type="text" name="image" value="@editingCar?.image" placeholder="https://..." 
+                class="w-full bg-zinc-900 border border-zinc-800 rounded-2xl py-4 px-6 text-sm text-white outline-none focus:border-emerald-500 transition-all" required />
+        </div>
+
+        <!-- Brand Select -->
+        <div class="space-y-4">
+            <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest ml-4">MARKA SEÇİN</label>
+            <div class="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-4 space-y-4">
+                <input type="text"
+                       placeholder="Marka ara..."
+                       class="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-2 px-4 text-xs text-white outline-none focus:border-emerald-500 transition-all"
+                       oninput="filterAdminOptions('brandOptions', this.value)" />
+                <div id="brandOptions" class="max-h-40 overflow-y-auto no-scrollbar space-y-1">
+                    @foreach(var brand in brands) {
+                        if (brand.id > 0 && !string.IsNullOrWhiteSpace(brand.name?.ToString())) {
+                            <label data-option-item data-option-name="@brand.name" class="flex items-center gap-3 p-2 hover:bg-zinc-800 rounded-lg cursor-pointer">
+                                <input type="radio" name="brandId" value="@brand.id" @(editingCar?.brandId == brand.id ? "checked" : "") class="w-4 h-4 accent-emerald-500" required />
+                                <span class="text-xs font-bold text-zinc-300">@brand.name</span>
+                            </label>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Fuel Type Select -->
+        <div class="space-y-4">
+            <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest ml-4">YAKIT TİPİ</label>
+            <div class="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-4 space-y-4">
+                <input type="text"
+                       placeholder="Yakıt tipi ara..."
+                       class="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-2 px-4 text-xs text-white outline-none focus:border-emerald-500 transition-all"
+                       oninput="filterAdminOptions('fuelOptions', this.value)" />
+                <div id="fuelOptions" class="max-h-40 overflow-y-auto no-scrollbar space-y-1">
+                    @foreach(var fuel in fuels) {
+                        if (fuel.id > 0 && !string.IsNullOrWhiteSpace(fuel.name?.ToString())) {
+                            <label data-option-item data-option-name="@fuel.name" class="flex items-center gap-3 p-2 hover:bg-zinc-800 rounded-lg cursor-pointer">
+                                <input type="radio" name="fuelTypeId" value="@fuel.id" @(editingCar?.fuelTypeId == fuel.id ? "checked" : "") class="w-4 h-4 accent-emerald-500" required />
+                                <span class="text-xs font-bold text-zinc-300">@fuel.name</span>
+                            </label>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Transmission Select -->
+        <div class="space-y-4">
+            <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest ml-4">VİTES TİPİ</label>
+            <div class="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-4 space-y-4">
+                <input type="text"
+                       placeholder="Vites tipi ara..."
+                       class="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-2 px-4 text-xs text-white outline-none focus:border-emerald-500 transition-all"
+                       oninput="filterAdminOptions('transmissionOptions', this.value)" />
+                <div id="transmissionOptions" class="max-h-40 overflow-y-auto no-scrollbar space-y-1">
+                    @foreach(var trans in transmissions) {
+                        if (trans.id > 0 && !string.IsNullOrWhiteSpace(trans.name?.ToString())) {
+                            <label data-option-item data-option-name="@trans.name" class="flex items-center gap-3 p-2 hover:bg-zinc-800 rounded-lg cursor-pointer">
+                                <input type="radio" name="transmissionTypeId" value="@trans.id" @(editingCar?.transmissionTypeId == trans.id ? "checked" : "") class="w-4 h-4 accent-emerald-500" required />
+                                <span class="text-xs font-bold text-zinc-300">@trans.name</span>
+                            </label>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Seats Select -->
+        <div class="space-y-4">
+            <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest ml-4">KOLTUK SAYISI</label>
+            <div class="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-4 space-y-4">
+                <input type="text"
+                       placeholder="Koltuk ara..."
+                       class="w-full bg-zinc-950 border border-zinc-800 rounded-xl py-2 px-4 text-xs text-white outline-none focus:border-emerald-500 transition-all"
+                       oninput="filterAdminOptions('seatOptions', this.value)" />
+                <div id="seatOptions" class="max-h-40 overflow-y-auto no-scrollbar space-y-1">
+                    @foreach(var seat in seats) {
+                        if (seat.id > 0 && !string.IsNullOrWhiteSpace(seat.name?.ToString())) {
+                            <label data-option-item data-option-name="@seat.name" class="flex items-center gap-3 p-2 hover:bg-zinc-800 rounded-lg cursor-pointer">
+                                <input type="radio" name="seatCountId" value="@seat.id" @(editingCar?.seatCountId == seat.id ? "checked" : "") class="w-4 h-4 accent-emerald-500" required />
+                                <span class="text-xs font-bold text-zinc-300">@seat.name</span>
+                            </label>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Vehicle Type Select -->
+        <div class="md:col-span-2 space-y-4">
+            <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest ml-4">ARAÇ TİPİ</label>
+            <div class="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-4">
+                <input type="text"
+                       placeholder="Araç tipi ara..."
+                       class="w-full mb-4 bg-zinc-950 border border-zinc-800 rounded-xl py-2 px-4 text-xs text-white outline-none focus:border-emerald-500 transition-all"
+                       oninput="filterAdminOptions('vehicleTypeOptions', this.value)" />
+                <div id="vehicleTypeOptions" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                    @foreach(var vehicleType in vehicleTypes) {
+                        if (vehicleType.id > 0 && !string.IsNullOrWhiteSpace(vehicleType.name?.ToString())) {
+                            <label data-option-item data-option-name="@vehicleType.name" class="flex items-center gap-3 p-2 hover:bg-zinc-800 rounded-lg cursor-pointer">
+                                <input type="radio" name="vehicleTypeId" value="@vehicleType.id" @(editingCar?.vehicleTypeId == vehicleType.id ? "checked" : "") class="w-4 h-4 accent-emerald-500" required />
+                                <span class="text-xs font-bold text-zinc-300">@vehicleType.name</span>
+                            </label>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Screens Checkboxes -->
+        <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6">
+            <label class="flex items-center gap-4 p-6 bg-zinc-900 border border-zinc-800 rounded-2xl cursor-pointer hover:border-emerald-500 transition-all">
+                <input type="checkbox" name="mainScreen" @(editingCar?.mainScreen == true ? "checked" : "") class="w-5 h-5 accent-emerald-500" />
+                <span class="text-xs font-bold text-zinc-300">Ana Sayfa</span>
+            </label>
+            <label class="flex items-center gap-4 p-6 bg-zinc-900 border border-zinc-800 rounded-2xl cursor-pointer hover:border-emerald-500 transition-all">
+                <input type="checkbox" name="popularScreen1" @(editingCar?.popularScreen1 == true ? "checked" : "") class="w-5 h-5 accent-emerald-500" />
+                <span class="text-xs font-bold text-zinc-300">Popüler 1</span>
+            </label>
+            <label class="flex items-center gap-4 p-6 bg-zinc-900 border border-zinc-800 rounded-2xl cursor-pointer hover:border-emerald-500 transition-all">
+                <input type="checkbox" name="popularScreen2" @(editingCar?.popularScreen2 == true ? "checked" : "") class="w-5 h-5 accent-emerald-500" />
+                <span class="text-xs font-bold text-zinc-300">Popüler 2</span>
+            </label>
+        </div>
+
+        <div class="md:col-span-2 pt-8 flex items-center gap-3">
+            <a href="@Url.Action("AdminPanel", "Admin", new { tab = "fleet" })"
+               class="inline-flex items-center justify-center px-5 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-xs font-bold text-zinc-400 hover:text-white transition-all">
+                İptal
+            </a>
+            <button type="submit" class="flex-1 py-5 bg-emerald-500 text-black rounded-2xl text-sm font-black hover:bg-emerald-400 transition-all shadow-2xl shadow-emerald-500/20">
+                @if(editingCar != null) { <text>Değişiklikleri Kaydet</text> } else { <text>Aracı Kaydet</text> }
+            </button>
+        </div>
+    </form>
+</div>

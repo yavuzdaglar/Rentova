@@ -1,0 +1,125 @@
+@using Rentova.UI.Models
+@model CarGridViewModel
+
+<section id="fleet" class="py-32 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6 mb-20">
+        <div class="max-w-xl">
+            <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-anthracite/40 mb-4 block">Filomuz</span>
+            <h2 class="text-5xl md:text-6xl font-display font-bold leading-tight">
+                MÜKEMMEL SÜRÜŞÜ <br />
+                <span class="text-brand-anthracite/30 italic">KEŞFEDİN</span>
+            </h2>
+        </div>
+    </div>
+
+    <div class="space-y-12">
+        @* First Row: PopularCars1 *@
+        <div class="relative flex overflow-hidden hover-pause">
+            <div class="flex animate-marquee gap-8 py-4">
+                @if (Model.PopularCars1 != null && Model.PopularCars1.Any())
+                {
+                    // Eğer az araba varsa boşluk kalmaması için çok tekrar et, çok araba varsa 2 tekrar yeterli
+                    int repeatCount1 = (int)Math.Max(2, Math.Ceiling(15.0 / Model.PopularCars1.Count));
+                    
+                    for (int i = 0; i < repeatCount1; i++)
+                    {
+                        foreach (var car in Model.PopularCars1)
+                        {
+                            <div class="group bg-white rounded-[2.5rem] border border-brand-gray/30 overflow-hidden hover:shadow-2xl transition-all duration-500 w-[320px] md:w-[400px] flex-shrink-0">
+                                <div class="relative aspect-[16/10] overflow-hidden">
+                                    <a href="/Reservation/Index?carId=@car.CarId" class="block w-full h-full" aria-label="@car.CarModel için rezervasyon sayfasına git">
+                                        <img src="@car.CarImage" alt="@car.CarModel" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                    </a>
+                                    <div class="absolute top-6 left-6">
+                                        <span class="px-4 py-1.5 bg-white/90 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-wider border border-brand-gray/20">@car.VehicleTypeName</span>
+                                    </div>
+                                </div>
+                                <div class="p-8">
+                                    <div class="flex justify-between items-start mb-6">
+                                        <div>
+                                            <p class="text-xs font-bold text-brand-anthracite/40 uppercase tracking-widest mb-1">@car.BrandName</p>
+                                            <h3 class="text-2xl font-display font-bold">@car.CarModel</h3>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="text-2xl font-display font-bold">@car.DailyPrice.ToString("N0") TL</p>
+                                            <p class="text-[10px] font-bold text-brand-anthracite/40 uppercase tracking-widest">/ Gün</p>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-4 py-6 border-y border-brand-gray/20 mb-8">
+                                        <div class="flex flex-col items-center gap-1">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-anthracite/40"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                            <span class="car-spec-value text-[10px] font-bold text-brand-anthracite/60 uppercase">@car.TransmissionTypeName</span>
+                                        </div>
+                                        <div class="flex flex-col items-center gap-1">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-anthracite/40"><path d="M3 22L17 22L17 11L13 7L13 2L4 2L4 7L3 11L3 22Z"/><path d="M13 11L17 11"/><path d="M4 11L8 11"/></svg>
+                                            <span class="car-spec-value text-[10px] font-bold text-brand-anthracite/60 uppercase">@car.FuelTypeName</span>
+                                        </div>
+                                        <div class="flex flex-col items-center gap-1">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-anthracite/40"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                            <span class="car-spec-value text-[10px] font-bold text-brand-anthracite/60 uppercase">@car.SeatCountName</span>
+                                        </div>
+                                    </div>
+                                    <a href="/Reservation/Index?carId=@car.CarId" class="car-rent-btn block w-full text-center py-4 bg-brand-light group-hover:bg-brand-black group-hover:text-white rounded-2xl font-bold transition-all duration-300">Hemen Kirala</a>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+
+        @* Second Row: PopularCars2 (Reverse Marquee) *@
+        <div class="relative flex overflow-hidden hover-pause">
+            <div class="flex animate-marquee-reverse gap-8 py-4">
+                @if (Model.PopularCars2 != null && Model.PopularCars2.Any())
+                {
+                    int repeatCount2 = (int)Math.Max(2, Math.Ceiling(15.0 / Model.PopularCars2.Count));
+                    
+                    for (int i = 0; i < repeatCount2; i++)
+                    {
+                        foreach (var car in Model.PopularCars2)
+                        {
+                            <div class="group bg-white rounded-[2.5rem] border border-brand-gray/30 overflow-hidden hover:shadow-2xl transition-all duration-500 w-[320px] md:w-[400px] flex-shrink-0">
+                                <div class="relative aspect-[16/10] overflow-hidden">
+                                    <a href="/Reservation/Index?carId=@car.CarId" class="block w-full h-full" aria-label="@car.CarModel için rezervasyon sayfasına git">
+                                        <img src="@car.CarImage" alt="@car.CarModel" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                    </a>
+                                    <div class="absolute top-6 left-6">
+                                        <span class="px-4 py-1.5 bg-white/90 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-wider border border-brand-gray/20">@car.VehicleTypeName</span>
+                                    </div>
+                                </div>
+                                <div class="p-8">
+                                    <div class="flex justify-between items-start mb-6">
+                                        <div>
+                                            <p class="text-xs font-bold text-brand-anthracite/40 uppercase tracking-widest mb-1">@car.BrandName</p>
+                                            <h3 class="text-2xl font-display font-bold">@car.CarModel</h3>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="text-2xl font-display font-bold">@car.DailyPrice.ToString("N0") TL</p>
+                                            <p class="text-[10px] font-bold text-brand-anthracite/40 uppercase tracking-widest">/ Gün</p>
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-4 py-6 border-y border-brand-gray/20 mb-8">
+                                        <div class="flex flex-col items-center gap-1">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-anthracite/40"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                            <span class="car-spec-value text-[10px] font-bold text-brand-anthracite/60 uppercase">@car.TransmissionTypeName</span>
+                                        </div>
+                                        <div class="flex flex-col items-center gap-1">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-anthracite/40"><path d="M3 22L17 22L17 11L13 7L13 2L4 2L4 7L3 11L3 22Z"/><path d="M13 11L17 11"/><path d="M4 11L8 11"/></svg>
+                                            <span class="car-spec-value text-[10px] font-bold text-brand-anthracite/60 uppercase">@car.FuelTypeName</span>
+                                        </div>
+                                        <div class="flex flex-col items-center gap-1">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-anthracite/40"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                            <span class="car-spec-value text-[10px] font-bold text-brand-anthracite/60 uppercase">@car.SeatCountName</span>
+                                        </div>
+                                    </div>
+                                    <a href="/Reservation/Index?carId=@car.CarId" class="car-rent-btn block w-full text-center py-4 bg-brand-light group-hover:bg-brand-black group-hover:text-white rounded-2xl font-bold transition-all duration-300">Hemen Kirala</a>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>

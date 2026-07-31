@@ -1,0 +1,398 @@
+html[data-theme='dark'] {
+    color-scheme: dark;
+    --dark-base: #09090B;
+    --dark-surface: #09090B;
+    --dark-border: #18181B;
+    --dark-text: #F4F4F5;
+    --dark-muted: #A1A1AA;
+}
+
+#scroll-progress {
+    background: #000000 !important;
+}
+
+html[data-theme='dark'] #scroll-progress {
+    background: #FFFFFF !important;
+}
+
+.theme-toggle-btn {
+    position: fixed;
+    left: 1rem;
+    bottom: 1rem;
+    z-index: 2000;
+    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+    border: 1px solid #1f1f1f;
+    border-radius: 9999px;
+    background: #111111;
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.58rem 0.95rem;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
+}
+
+html[data-theme='dark'] .theme-toggle-btn {
+    background: #f5f5f5;
+    color: #111111;
+    border-color: #f5f5f5;
+}
+
+html[data-theme='dark'] body {
+    background: var(--dark-base) !important;
+    color: var(--dark-text) !important;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+html[data-theme='dark'] .bg-white,
+html[data-theme='dark'] .bg-brand-white,
+html[data-theme='dark'] .bg-brand-light,
+html[data-theme='dark'] .bg-gray-50,
+html[data-theme='dark'] .bg-zinc-50,
+html[data-theme='dark'] .bg-zinc-100,
+html[data-theme='dark'] .bg-neutral-50,
+html[data-theme='dark'] .bg-neutral-100 {
+    background-color: var(--dark-surface) !important;
+}
+
+html[data-theme='dark'] .text-black,
+html[data-theme='dark'] .text-brand-black,
+html[data-theme='dark'] .text-zinc-900,
+html[data-theme='dark'] .text-zinc-800,
+html[data-theme='dark'] .text-neutral-900,
+html[data-theme='dark'] .text-neutral-800 {
+    color: var(--dark-text) !important;
+}
+
+html[data-theme='dark'] .text-zinc-700,
+html[data-theme='dark'] .text-zinc-600,
+html[data-theme='dark'] .text-zinc-500,
+html[data-theme='dark'] .text-zinc-400,
+html[data-theme='dark'] .text-zinc-300,
+html[data-theme='dark'] .text-neutral-700,
+html[data-theme='dark'] .text-neutral-600,
+html[data-theme='dark'] .text-neutral-500,
+html[data-theme='dark'] .text-neutral-400,
+html[data-theme='dark'] .text-neutral-300,
+html[data-theme='dark'] .text-gray-500,
+html[data-theme='dark'] .text-gray-400,
+html[data-theme='dark'] .text-gray-300,
+html[data-theme='dark'] .text-brand-anthracite,
+html[data-theme='dark'] .text-brand-anthracite\/50,
+html[data-theme='dark'] .text-brand-anthracite\/40,
+html[data-theme='dark'] .text-brand-anthracite\/30,
+html[data-theme='dark'] .text-brand-anthracite\/20 {
+    color: #D4D4D8 !important;
+}
+
+html[data-theme='dark'] .text-black\/70,
+html[data-theme='dark'] .text-black\/60,
+html[data-theme='dark'] .text-black\/50,
+html[data-theme='dark'] .text-black\/40,
+html[data-theme='dark'] .text-black\/30,
+html[data-theme='dark'] .text-brand-black\/70,
+html[data-theme='dark'] .text-brand-black\/60,
+html[data-theme='dark'] .text-brand-black\/50,
+html[data-theme='dark'] .text-brand-black\/40,
+html[data-theme='dark'] .text-brand-black\/30 {
+    color: #C4C4CC !important;
+}
+
+html[data-theme='dark'] .border,
+html[data-theme='dark'] .border-gray-100,
+html[data-theme='dark'] .border-gray-200,
+html[data-theme='dark'] .border-gray-300,
+html[data-theme='dark'] .border-zinc-100,
+html[data-theme='dark'] .border-zinc-200,
+html[data-theme='dark'] .border-zinc-300,
+html[data-theme='dark'] .border-neutral-200,
+html[data-theme='dark'] .border-neutral-300,
+html[data-theme='dark'] .border-brand-gray\/20,
+html[data-theme='dark'] .border-brand-gray\/30,
+html[data-theme='dark'] .border-black\/10,
+html[data-theme='dark'] .border-black\/20,
+html[data-theme='dark'] .border-black\/30 {
+    border-color: var(--dark-border) !important;
+}
+
+html[data-theme='dark'] .bg-white\/90,
+html[data-theme='dark'] .bg-white\/80,
+html[data-theme='dark'] .bg-white\/70,
+html[data-theme='dark'] .bg-white\/60,
+html[data-theme='dark'] .bg-white\/50,
+html[data-theme='dark'] .bg-brand-light\/90,
+html[data-theme='dark'] .bg-brand-light\/80,
+html[data-theme='dark'] .bg-brand-light\/70,
+html[data-theme='dark'] .bg-brand-light\/60,
+html[data-theme='dark'] .bg-brand-light\/50 {
+    background-color: var(--dark-surface) !important;
+}
+
+html[data-theme='dark'] .account-shell,
+html[data-theme='dark'] .account-layout-sidebar,
+html[data-theme='dark'] .account-user-card,
+html[data-theme='dark'] .account-message-compose,
+html[data-theme='dark'] .account-message-item,
+html[data-theme='dark'] .account-messages-detail,
+html[data-theme='dark'] .account-settings-card,
+html[data-theme='dark'] .account-reservation-card,
+html[data-theme='dark'] .account-empty,
+html[data-theme='dark'] .account-delete-confirm-toast {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text) !important;
+}
+
+html[data-theme='dark'] #loginCard,
+html[data-theme='dark'] #loginCard .bg-white,
+html[data-theme='dark'] #loginCard .bg-brand-light,
+html[data-theme='dark'] #loginCard .bg-brand-light\/50,
+html[data-theme='dark'] #loginCard .bg-white\/80 {
+    background: var(--dark-surface) !important;
+    color: var(--dark-text) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html[data-theme='dark'] .account-input,
+html[data-theme='dark'] .account-textarea,
+html[data-theme='dark'] .account-field input {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text) !important;
+}
+
+html[data-theme='dark'] .account-input::placeholder,
+html[data-theme='dark'] .account-textarea::placeholder,
+html[data-theme='dark'] .account-field input::placeholder {
+    color: var(--dark-muted) !important;
+}
+
+html[data-theme='dark'] input,
+html[data-theme='dark'] textarea,
+html[data-theme='dark'] select,
+html[data-theme='dark'] option {
+    color: var(--dark-text) !important;
+}
+
+html[data-theme='dark'] input::placeholder,
+html[data-theme='dark'] textarea::placeholder,
+html[data-theme='dark'] .placeholder\:text-zinc-400::placeholder,
+html[data-theme='dark'] .placeholder\:text-zinc-500::placeholder,
+html[data-theme='dark'] .placeholder\:text-neutral-400::placeholder,
+html[data-theme='dark'] .placeholder\:text-neutral-500::placeholder {
+    color: var(--dark-muted) !important;
+    opacity: 1;
+}
+
+html[data-theme='dark'] a {
+    color: #f5f5f5;
+}
+
+html[data-theme='dark'] a:hover {
+    color: #ffffff;
+}
+
+html[data-theme='dark'] .hover\:bg-white:hover,
+html[data-theme='dark'] .hover\:bg-brand-light:hover,
+html[data-theme='dark'] .hover\:bg-brand-light\/50:hover {
+    background-color: var(--dark-surface) !important;
+}
+
+html[data-theme='dark'] #mainHeroSection .hero-main-title {
+    color: #f8f8f8 !important;
+    text-shadow: 0 6px 26px rgba(0, 0, 0, 0.45);
+}
+
+html[data-theme='dark'] #mainHeroSection .hero-title-accent {
+    color: #cfcfcf !important;
+}
+
+html[data-theme='dark'] #mainHeroSection .hero-main-description {
+    color: #dddddd !important;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+}
+
+html[data-theme='dark'] #mainHeroSection .bg-gradient-to-r {
+    background: linear-gradient(to right, rgba(8, 8, 8, 0.88), rgba(8, 8, 8, 0.42), rgba(8, 8, 8, 0.05)) !important;
+}
+
+html[data-theme='dark'] #about .feature-card-description {
+    color: #d2d2d2 !important;
+}
+
+html[data-theme='dark'] #about .feature-lead-text {
+    color: #dddddd !important;
+}
+
+html[data-theme='dark'] #about .feature-icon-box {
+    background: #efefef !important;
+    color: #111111 !important;
+    border: 1px solid #d8d8d8;
+}
+
+html[data-theme='dark'] #fleet .car-spec-value {
+    color: #e3e3e3 !important;
+}
+
+html[data-theme='dark'] #fleet .car-rent-btn {
+    background: #f1f1f1 !important;
+    color: #121212 !important;
+    border: 1px solid #efefef !important;
+}
+
+html[data-theme='dark'] #fleet .group:hover .car-rent-btn {
+    background: #ffffff !important;
+    color: #000000 !important;
+}
+
+html[data-theme='dark'] .account-brand,
+html[data-theme='dark'] .account-brand span,
+html[data-theme='dark'] .account-panel-title,
+html[data-theme='dark'] .account-user-name,
+html[data-theme='dark'] .account-user-email,
+html[data-theme='dark'] .account-reservation-name,
+html[data-theme='dark'] .account-delete-confirm-text {
+    color: #f5f5f5 !important;
+}
+
+html[data-theme='dark'] .account-count-badge,
+html[data-theme='dark'] .account-reservation-meta,
+html[data-theme='dark'] .account-message-item-content,
+html[data-theme='dark'] .account-message-detail-date,
+html[data-theme='dark'] .account-thread-sender,
+html[data-theme='dark'] .account-thread-time,
+html[data-theme='dark'] .account-field span {
+    color: #cfcfcf !important;
+}
+
+html[data-theme='dark'] #accountSidebarFullName,
+html[data-theme='dark'] #accountSidebarEmail,
+html[data-theme='dark'] #accountReservationCountBadge {
+    color: #f0f0f0 !important;
+}
+
+html[data-theme='dark'] .account-count-badge {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html[data-theme='dark'] .account-tab-btn {
+    color: #d8d8d8 !important;
+}
+
+html[data-theme='dark'] .account-tab-btn:hover {
+    background: var(--dark-surface) !important;
+    color: #ffffff !important;
+}
+
+html[data-theme='dark'] .account-tab-btn.is-active {
+    background: #f3f3f3 !important;
+    color: #111111 !important;
+}
+
+html[data-theme='dark'] .account-tab-btn.is-active .account-tab-icon,
+html[data-theme='dark'] .account-tab-btn.is-active svg {
+    color: #111111 !important;
+}
+
+html[data-theme='dark'] .account-tab-icon,
+html[data-theme='dark'] .account-tab-icon svg,
+html[data-theme='dark'] .account-menu-trigger,
+html[data-theme='dark'] .account-logout-link {
+    color: #e8e8e8 !important;
+}
+
+html[data-theme='dark'] .account-message-thread .account-thread-row:not(.from-user) .account-thread-bubble {
+    background: var(--dark-surface) !important;
+    color: #f1f1f1 !important;
+    border: 1px solid var(--dark-border);
+}
+
+html[data-theme='dark'] .account-message-thread .account-thread-row.from-user .account-thread-bubble {
+    background: #f0f0f0 !important;
+    color: #101010 !important;
+}
+
+html[data-theme='dark'] .account-message-thread .account-thread-row.from-user .account-thread-sender,
+html[data-theme='dark'] .account-message-thread .account-thread-row.from-user .account-thread-time {
+    color: #3d3d3d !important;
+    opacity: 1;
+}
+
+html[data-theme='dark'] .account-message-thread .account-thread-row:not(.from-user) .account-thread-sender,
+html[data-theme='dark'] .account-message-thread .account-thread-row:not(.from-user) .account-thread-time {
+    color: #bfbfbf !important;
+    opacity: 1;
+}
+
+html[data-theme='dark'] .account-menu-trigger {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html[data-theme='dark'] .account-menu-trigger:hover {
+    background: #f3f3f3 !important;
+    color: #111111 !important;
+    border-color: #f3f3f3 !important;
+}
+
+html[data-theme='dark'] .account-logout-link {
+    color: #ff8d8d !important;
+}
+
+html[data-theme='dark'] .account-logout-link:hover {
+    background: #2b1515 !important;
+    color: #ffb1b1 !important;
+}
+
+html[data-theme='dark'] .account-icon-btn.go {
+    background: #1a1a1a !important;
+    color: #f5f5f5 !important;
+}
+
+html[data-theme='dark'] .account-warning-note {
+    background: #2a1111 !important;
+    border-color: #9f2f2f !important;
+    color: #ff9a9a !important;
+}
+
+html[data-theme='dark'] .account-primary-btn {
+    background: #f5f5f5 !important;
+    color: #111111 !important;
+}
+
+html[data-theme='dark'] .account-primary-btn:hover {
+    background: #dbdbdb !important;
+}
+
+html[data-theme='dark'] .shadow,
+html[data-theme='dark'] .shadow-sm,
+html[data-theme='dark'] .shadow-md,
+html[data-theme='dark'] .shadow-lg,
+html[data-theme='dark'] .shadow-xl,
+html[data-theme='dark'] .shadow-2xl {
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45) !important;
+}
+
+html[data-theme='dark'] img {
+    opacity: 0.96;
+}
+
+@media (max-width: 640px) {
+    .theme-toggle-btn {
+        left: 0.75rem;
+        bottom: 0.75rem;
+        font-size: 0.64rem;
+        padding: 0.5rem 0.78rem;
+    }
+}

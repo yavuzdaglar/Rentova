@@ -1,0 +1,510 @@
+@using System.Collections.Generic
+@using System.Linq
+@{
+    var mockBookings = ViewBag.MockBookings ?? new List<dynamic>();
+    var mockFleet = ViewBag.MockFleet ?? new List<dynamic>();
+    var selectedCarFilter = ViewBag.SelectedCarFilter as string;
+    var selectedCalendarCar = ViewBag.SelectedCalendarCar as int?;
+    var selectedReservationId = ViewBag.SelectedReservationId as int?;
+    var calendarSearch = ViewBag.CalendarSearch as string ?? "";
+    var calendarPage = ViewBag.CalendarPage ?? 1;
+    var currentMonth = ViewBag.CurrentMonth ?? DateTime.Today.Month;
+    var currentYear = ViewBag.CurrentYear ?? DateTime.Today.Year;
+    var calendarItemsPerPage = 8;
+    var bookingSearch = ViewBag.BookingSearch as string ?? "";
+    var bookingStatus = ViewBag.BookingStatus as string ?? "all";
+    var carFilterSearch = ViewBag.CarFilterSearch as string ?? "";
+    var bookingPage = ViewBag.BookingPage ?? 1;
+    var bookingItemsPerPage = 8;
+
+    var filteredBookingRows = new List<dynamic>();
+    foreach (dynamic booking in mockBookings)
+    {
+        var carOk = string.IsNullOrEmpty(selectedCarFilter) || (string)booking.car == selectedCarFilter;
+        var searchText = bookingSearch.Trim();
+        var searchOk = string.IsNullOrWhiteSpace(searchText)
+            || ((string?)booking.user ?? string.Empty).Contains(searchText, StringComparison.OrdinalIgnoreCase)
+            || ((string?)booking.car ?? string.Empty).Contains(searchText, StringComparison.OrdinalIgnoreCase)
+            || ((string?)booking.email ?? string.Empty).Contains(searchText, StringComparison.OrdinalIgnoreCase);
+
+        if (carOk && searchOk)
+        {
+            filteredBookingRows.Add(booking);
+        }
+    }
+
+    var bookingTotalPages = Math.Max(1, (int)Math.Ceiling((double)filteredBookingRows.Count / bookingItemsPerPage));
+    var currentBookingPage = Math.Max(1, Math.Min((int)bookingPage, bookingTotalPages));
+    var pagedBookingRows = filteredBookingRows
+        .Skip((currentBookingPage - 1) * bookingItemsPerPage)
+        .Take(bookingItemsPerPage)
+        .ToList();
+
+    var calendarCars = new List<dynamic>();
+    foreach (dynamic car in mockFleet)
+    {
+        var brand = ((string?)car.brand ?? string.Empty).ToLower();
+        var model = ((string?)car.model ?? string.Empty).ToLower();
+        if (string.IsNullOrWhiteSpace(calendarSearch) || brand.Contains(calendarSearch.ToLower()) || model.Contains(calendarSearch.ToLower()))
+        {
+            calendarCars.Add(car);
+        }
+    }
+
+    var calendarTotalPages = (int)Math.Ceiling((double)Math.Max(1, calendarCars.Count) / calendarItemsPerPage);
+    var currentCalendarPage = Math.Max(1, Math.Min((int)calendarPage, calendarTotalPages));
+    var monthDate = new DateTime((int)currentYear, (int)currentMonth, 1);
+    var monthNames = new[] { "Ocak", "Subat", "Mart", "Nisan", "Mayis", "Haziran", "Temmuz", "Agustos", "Eylul", "Ekim", "Kasim", "Aralik" };
+    var selectedCalendarCarInfo = selectedCalendarCar != null
+        ? calendarCars.FirstOrDefault(c => (int)c.id == (int)selectedCalendarCar)
+        : null;
+
+    dynamic? selectedCarLatestBooking = null;
+    if (selectedCalendarCar != null)
+    {
+        foreach (dynamic booking in mockBookings)
+        {
+            if ((int)booking.carId == (int)selectedCalendarCar)
+            {
+                DateTime? bookingStart = booking!.startDateValue is DateTime bs ? bs : booking!.startDateValue as DateTime?;
+                DateTime? latestStart = selectedCarLatestBooking != null
+                    ? (selectedCarLatestBooking.startDateValue is DateTime ls ? ls : selectedCarLatestBooking.startDateValue as DateTime?)
+                    : null;
+
+                if (bookingStart != null && (latestStart == null || bookingStart > latestStart))
+                {
+                    selectedCarLatestBooking = booking;
+                }
+            }
+        }
+    }
+
+    dynamic? selectedReservation = null;
+    if (selectedReservationId != null)
+    {
+        foreach (dynamic booking in mockBookings)
+        {
+            if ((int)booking.id == (int)selectedReservationId)
+            {
+                selectedReservation = booking;
+                break;
+            }
+        }
+    }
+    if (selectedReservation == null)
+    {
+        selectedReservation = selectedCarLatestBooking;
+    }
+
+    var uniqueCars = new List<string>();
+    foreach(dynamic b in mockBookings) {
+        var carName = (string)b.car;
+        if(!uniqueCars.Contains(carName)) {
+            uniqueCars.Add(carName);
+        }
+    }
+
+    var filteredCarChips = uniqueCars
+        .Where(car => string.IsNullOrWhiteSpace(carFilterSearch)
+            || car.Contains(carFilterSearch, StringComparison.OrdinalIgnoreCase))
+        .ToList();
+}
+
+<div class="space-y-12">
+    <div class="bg-zinc-950 border border-zinc-800 rounded-[3rem] overflow-hidden">
+        <div class="p-8 border-b border-zinc-800">
+            <h3 class="text-xl font-display font-bold text-white">Tüm Rezervasyonlar</h3>
+            <div class="mt-5 flex flex-wrap gap-3">
+                <form method="GET" action="@Url.Action("AdminPanel", "Admin")" style="display:inline;">
+                    <input type="hidden" name="tab" value="bookings">
+                    <input type="hidden" name="carFilter" value="@selectedCarFilter">
+                    <input type="hidden" name="bookingSearch" value="@bookingSearch">
+                    <input type="hidden" name="carFilterSearch" value="@carFilterSearch">
+                    <input type="hidden" name="bookingStatus" value="all">
+                    <button type="submit" class="px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all @(bookingStatus == "all" ? "bg-emerald-500 text-black" : "bg-zinc-900 text-zinc-500 hover:text-white")">Tümü</button>
+                </form>
+                <form method="GET" action="@Url.Action("AdminPanel", "Admin")" style="display:inline;">
+                    <input type="hidden" name="tab" value="bookings">
+                    <input type="hidden" name="carFilter" value="@selectedCarFilter">
+                    <input type="hidden" name="bookingSearch" value="@bookingSearch">
+                    <input type="hidden" name="carFilterSearch" value="@carFilterSearch">
+                    <input type="hidden" name="bookingStatus" value="active">
+                    <button type="submit" class="px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all @(bookingStatus == "active" ? "bg-emerald-500 text-black" : "bg-zinc-900 text-zinc-500 hover:text-white")">Aktif</button>
+                </form>
+                <form method="GET" action="@Url.Action("AdminPanel", "Admin")" style="display:inline;">
+                    <input type="hidden" name="tab" value="bookings">
+                    <input type="hidden" name="carFilter" value="@selectedCarFilter">
+                    <input type="hidden" name="bookingSearch" value="@bookingSearch">
+                    <input type="hidden" name="carFilterSearch" value="@carFilterSearch">
+                    <input type="hidden" name="bookingStatus" value="pending">
+                    <button type="submit" class="px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all @(bookingStatus == "pending" ? "bg-amber-500 text-black" : "bg-zinc-900 text-zinc-500 hover:text-white")">Beklemede</button>
+                </form>
+                <form method="GET" action="@Url.Action("AdminPanel", "Admin")" style="display:inline;">
+                    <input type="hidden" name="tab" value="bookings">
+                    <input type="hidden" name="carFilter" value="@selectedCarFilter">
+                    <input type="hidden" name="bookingSearch" value="@bookingSearch">
+                    <input type="hidden" name="carFilterSearch" value="@carFilterSearch">
+                    <input type="hidden" name="bookingStatus" value="finished">
+                    <button type="submit" class="px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all @(bookingStatus == "finished" ? "bg-red-500 text-white" : "bg-zinc-900 text-zinc-500 hover:text-white")">Bitti</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Car Selection Filter -->
+        <div class="p-8 border-b border-zinc-800/50 bg-zinc-900/10">
+            <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-4 ml-2">ARAÇ SEÇİN (TABLO FİLTRESİ)</p>
+            <form method="GET" action="@Url.Action("AdminPanel", "Admin")" class="mb-4">
+                <input type="hidden" name="tab" value="bookings">
+                <input type="hidden" name="carFilter" value="@selectedCarFilter">
+                <input type="hidden" name="carFilterSearch" value="@carFilterSearch">
+                <input type="hidden" name="bookingStatus" value="@bookingStatus">
+                <input type="text" name="bookingSearch" value="@bookingSearch" placeholder="Rezervasyon ara (müşteri, araç, e-posta)..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 px-4 text-sm text-white outline-none focus:border-emerald-500" />
+            </form>
+
+            <form method="GET" action="@Url.Action("AdminPanel", "Admin")" class="mb-4">
+                <input type="hidden" name="tab" value="bookings">
+                <input type="hidden" name="bookingSearch" value="@bookingSearch">
+                <input type="hidden" name="bookingStatus" value="@bookingStatus">
+                <input type="hidden" name="carFilter" value="@selectedCarFilter">
+                <input type="text" name="carFilterSearch" value="@carFilterSearch" placeholder="Marka/model chip ara..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 px-4 text-sm text-white outline-none focus:border-emerald-500" />
+            </form>
+
+            <div class="text-[10px] text-zinc-500 uppercase tracking-widest mb-3 ml-2">Chipleri sola-sağa sürükleyebilirsin</div>
+            <div class="booking-car-filter-track flex gap-3 overflow-x-auto pb-2 no-scrollbar cursor-grab select-none" data-drag-scroll="true">
+                <form method="GET" action="@Url.Action("AdminPanel", "Admin")" style="display:inline;">
+                    <input type="hidden" name="tab" value="bookings">
+                    <input type="hidden" name="bookingSearch" value="@bookingSearch">
+                    <input type="hidden" name="carFilterSearch" value="@carFilterSearch">
+                    <input type="hidden" name="bookingStatus" value="@bookingStatus">
+                    <input type="hidden" name="carFilter" value="">
+                    <button type="submit" class="px-6 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all whitespace-nowrap @(string.IsNullOrEmpty(selectedCarFilter) ? "bg-emerald-500 text-black" : "bg-zinc-900 text-zinc-500 hover:text-white")">Tümü</button>
+                </form>
+
+                @foreach(var car in filteredCarChips) {
+                    <form method="GET" action="@Url.Action("AdminPanel", "Admin")" style="display:inline;">
+                        <input type="hidden" name="tab" value="bookings">
+                        <input type="hidden" name="bookingSearch" value="@bookingSearch">
+                        <input type="hidden" name="carFilterSearch" value="@carFilterSearch">
+                        <input type="hidden" name="bookingStatus" value="@bookingStatus">
+                        <input type="hidden" name="carFilter" value="@car">
+                        <button type="submit" class="px-6 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all whitespace-nowrap @(selectedCarFilter == car ? "bg-emerald-500 text-black" : "bg-zinc-900 text-zinc-500 hover:text-white")">@car</button>
+                    </form>
+                }
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest border-b border-zinc-800/50">
+                        <th class="px-8 py-6">ID</th>
+                        <th class="px-8 py-6">Müşteri</th>
+                        <th class="px-8 py-6">Araç</th>
+                        <th class="px-8 py-6">Başlangıç</th>
+                        <th class="px-8 py-6">Bitiş</th>
+                        <th class="px-8 py-6">Tutar</th>
+                        <th class="px-8 py-6 text-right">Durum</th>
+                        <th class="px-8 py-6 text-right">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm">
+                    @foreach(var booking in pagedBookingRows) {
+                        <tr class="border-b border-zinc-800/30 hover:bg-zinc-900/30 transition-colors">
+                            <td class="px-8 py-6 text-zinc-500 font-mono text-xs">@booking.id</td>
+                            <td class="px-8 py-6 font-bold text-white">@booking.user</td>
+                            <td class="px-8 py-6 text-zinc-400">@booking.car</td>
+                            <td class="px-8 py-6 text-zinc-500 text-xs">@booking.startDate</td>
+                            <td class="px-8 py-6 text-zinc-500 text-xs">@booking.endDate</td>
+                            <td class="px-8 py-6 font-bold text-emerald-500">@booking.amount</td>
+                            <td class="px-8 py-6 text-right">
+                                @{
+                                    var statusClass = booking.status == "Aktif" ? "bg-emerald-500/10 text-emerald-500" :
+                                                    booking.status == "Beklemede" ? "bg-amber-500/10 text-amber-500" :
+                                                    "bg-red-500/10 text-red-500 border border-red-500/20";
+                                }
+                                <span class="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full @statusClass">@booking.status</span>
+                            </td>
+                            <td class="px-8 py-6 text-right">
+                                <form method="POST" action="@Url.Action("DeleteReservation", "Admin")" style="display:inline;">
+                                    <input type="hidden" name="reservationId" value="@booking.id">
+                                    <input type="hidden" name="carFilter" value="@selectedCarFilter">
+                                    <input type="hidden" name="bookingStatus" value="@bookingStatus">
+                                    <input type="hidden" name="bookingSearch" value="@bookingSearch">
+                                    <input type="hidden" name="carFilterSearch" value="@carFilterSearch">
+                                    <input type="hidden" name="bookingPage" value="@currentBookingPage">
+                                    <button type="submit" class="p-3 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-500 hover:text-red-500 transition-all" title="Rezervasyonu sil">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (bookingTotalPages > 1)
+        {
+            <div class="p-6 border-t border-zinc-800 flex justify-center gap-2">
+                @for (int i = 1; i <= bookingTotalPages; i++)
+                {
+                    <form method="GET" action="@Url.Action("AdminPanel", "Admin")" style="display:inline;">
+                        <input type="hidden" name="tab" value="bookings">
+                        <input type="hidden" name="carFilter" value="@selectedCarFilter">
+                        <input type="hidden" name="bookingStatus" value="@bookingStatus">
+                        <input type="hidden" name="bookingSearch" value="@bookingSearch">
+                        <input type="hidden" name="carFilterSearch" value="@carFilterSearch">
+                        <input type="hidden" name="bookingPage" value="@i">
+                        <button type="submit" class="w-9 h-9 rounded-lg text-xs font-bold transition-all @(currentBookingPage == i ? "bg-emerald-500 text-black" : "bg-zinc-900 text-zinc-500 hover:text-white")">@i</button>
+                    </form>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="bg-zinc-950 border border-zinc-800 rounded-[3rem] p-8 md:p-12 shadow-2xl">
+        <div class="mb-10">
+            <h2 class="text-3xl font-display font-bold text-white">Rezervasyon Takvimi</h2>
+            <p class="text-xs text-zinc-500 font-bold uppercase tracking-widest mt-1">Takvim icin arac secin</p>
+        </div>
+
+        <div class="mb-8 relative">
+            <svg class="absolute left-6 top-1/2 -translate-y-1/2 text-zinc-500 w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <form method="GET" action="@Url.Action("AdminPanel", "Admin")">
+                <input type="hidden" name="tab" value="bookings">
+                <input type="hidden" name="selectedCalendarCar" value="@selectedCalendarCar">
+                <input type="hidden" name="selectedReservationId" value="@selectedReservationId">
+                <input type="hidden" name="currentMonth" value="@currentMonth">
+                <input type="hidden" name="currentYear" value="@currentYear">
+                <input type="text" name="calendarSearch" placeholder="Takvimde arac ara..."
+                       value="@calendarSearch"
+                       class="w-full bg-zinc-900 border border-zinc-800 rounded-2xl py-4 pl-16 pr-8 text-sm text-white outline-none focus:border-emerald-500 transition-all" />
+            </form>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+            @foreach (var car in calendarCars.Skip((currentCalendarPage - 1) * calendarItemsPerPage).Take(calendarItemsPerPage))
+            {
+                <form method="GET" action="@Url.Action("AdminPanel", "Admin")" style="display:inline;">
+                    <input type="hidden" name="tab" value="bookings">
+                    <input type="hidden" name="selectedCalendarCar" value="@car.id">
+                    <input type="hidden" name="calendarSearch" value="@calendarSearch">
+                    <input type="hidden" name="calendarPage" value="@currentCalendarPage">
+                    <input type="hidden" name="selectedReservationId" value="@selectedReservationId">
+                    <input type="hidden" name="currentMonth" value="@currentMonth">
+                    <input type="hidden" name="currentYear" value="@currentYear">
+                    <button type="submit" class="w-full p-4 rounded-3xl border transition-all text-left group @((selectedCalendarCar == (int)car.id) ? "bg-zinc-900 border-emerald-500 shadow-xl shadow-emerald-500/10" : "bg-zinc-900/30 border-zinc-800 hover:border-zinc-700")">
+                        <div class="aspect-video rounded-2xl overflow-hidden mb-4">
+                            <img src="@car.image" alt="@car.model" class="w-full h-full object-cover" referrerpolicy="no-referrer" />
+                        </div>
+                        <p class="text-[10px] text-emerald-500 font-bold uppercase tracking-widest mb-1">@car.brand</p>
+                        <h4 class="text-sm font-bold text-white group-hover:text-emerald-500 transition-colors">@car.model</h4>
+                    </button>
+                </form>
+            }
+        </div>
+
+        @if (calendarCars.Count > calendarItemsPerPage)
+        {
+            <div class="flex justify-center gap-2 mb-12">
+                @for (int i = 1; i <= calendarTotalPages; i++)
+                {
+                    <form method="GET" action="@Url.Action("AdminPanel", "Admin")" style="display:inline;">
+                        <input type="hidden" name="tab" value="bookings">
+                        <input type="hidden" name="selectedCalendarCar" value="@selectedCalendarCar">
+                        <input type="hidden" name="calendarSearch" value="@calendarSearch">
+                        <input type="hidden" name="calendarPage" value="@i">
+                        <input type="hidden" name="selectedReservationId" value="@selectedReservationId">
+                        <input type="hidden" name="currentMonth" value="@currentMonth">
+                        <input type="hidden" name="currentYear" value="@currentYear">
+                        <button type="submit" class="w-8 h-8 rounded-lg font-bold text-[10px] transition-all @(currentCalendarPage == i ? "bg-emerald-500 text-black" : "bg-zinc-900 text-zinc-500 hover:text-white")">@i</button>
+                    </form>
+                }
+            </div>
+        }
+
+        @if (selectedCalendarCarInfo != null)
+        {
+            <div class="space-y-12">
+                <div class="flex flex-col items-center gap-8 mb-12">
+                    <div class="flex items-center gap-8 bg-zinc-900/50 p-4 rounded-[2rem] border border-zinc-800 shadow-xl">
+                        @{
+                            var prevMonthDate = monthDate.AddMonths(-1);
+                            var nextMonthDate = monthDate.AddMonths(1);
+                        }
+                        <form method="GET" action="@Url.Action("AdminPanel", "Admin")" style="display:inline;">
+                            <input type="hidden" name="tab" value="bookings">
+                            <input type="hidden" name="selectedCalendarCar" value="@selectedCalendarCar">
+                            <input type="hidden" name="calendarSearch" value="@calendarSearch">
+                            <input type="hidden" name="calendarPage" value="@currentCalendarPage">
+                            <input type="hidden" name="selectedReservationId" value="@selectedReservationId">
+                            <input type="hidden" name="currentMonth" value="@prevMonthDate.Month">
+                            <input type="hidden" name="currentYear" value="@prevMonthDate.Year">
+                            <button type="submit" class="w-12 h-12 flex items-center justify-center hover:bg-zinc-800 rounded-2xl transition-all text-zinc-400 hover:text-white border border-zinc-800">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                            </button>
+                        </form>
+                        <div class="flex flex-col items-center min-w-[180px]">
+                            <span class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mb-1">Secili Donem</span>
+                            <span class="text-xl font-display font-black text-white tracking-widest">@monthNames[monthDate.Month - 1] @monthDate.Year</span>
+                        </div>
+                        <form method="GET" action="@Url.Action("AdminPanel", "Admin")" style="display:inline;">
+                            <input type="hidden" name="tab" value="bookings">
+                            <input type="hidden" name="selectedCalendarCar" value="@selectedCalendarCar">
+                            <input type="hidden" name="calendarSearch" value="@calendarSearch">
+                            <input type="hidden" name="calendarPage" value="@currentCalendarPage">
+                            <input type="hidden" name="selectedReservationId" value="@selectedReservationId">
+                            <input type="hidden" name="currentMonth" value="@nextMonthDate.Month">
+                            <input type="hidden" name="currentYear" value="@nextMonthDate.Year">
+                            <button type="submit" class="w-12 h-12 flex items-center justify-center hover:bg-zinc-800 rounded-2xl transition-all text-zinc-400 hover:text-white border border-zinc-800">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="flex gap-8">
+                        <div class="flex items-center gap-3">
+                            <div class="w-5 h-5 rounded-lg bg-emerald-500 shadow-lg shadow-emerald-500/20"></div>
+                            <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Secili Arac</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-5 h-5 rounded-lg bg-zinc-800 border border-zinc-700"></div>
+                            <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Dolu / Rezerve</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-7 gap-2 mb-2">
+                    @foreach (var dayName in new[] { "Pzt", "Sal", "Car", "Per", "Cum", "Cmt", "Paz" })
+                    {
+                        <div class="text-center py-2 text-[10px] font-bold text-zinc-600 uppercase tracking-widest">@dayName</div>
+                    }
+                </div>
+
+                <div class="grid grid-cols-7 gap-2 mb-12">
+                    @for (int day = 1; day <= DateTime.DaysInMonth(monthDate.Year, monthDate.Month); day++)
+                    {
+                        var dayDate = new DateTime(monthDate.Year, monthDate.Month, day);
+                        dynamic? reservation = null;
+                        foreach (dynamic b in mockBookings)
+                        {
+                            if (selectedCalendarCar != null
+                                && b.carId is int bCarId
+                                && bCarId == (int)selectedCalendarCar
+                                && b.startDateValue is DateTime startDate
+                                && b.endDateValue is DateTime endDate
+                                && startDate.Date <= dayDate
+                                && endDate.Date >= dayDate)
+                            {
+                                reservation = b;
+                                break;
+                            }
+                        }
+
+                        DateTime? selectedStartDate = selectedReservation != null
+                            ? (selectedReservation.startDateValue is DateTime ss ? ss : selectedReservation.startDateValue as DateTime?)
+                            : null;
+                        DateTime? selectedEndDate = selectedReservation != null
+                            ? (selectedReservation.endDateValue is DateTime se ? se : selectedReservation.endDateValue as DateTime?)
+                            : null;
+
+                        var isSelectedReservationDay = selectedStartDate != null
+                            && selectedEndDate != null
+                            && selectedStartDate.Value.Date <= dayDate
+                            && selectedEndDate.Value.Date >= dayDate;
+
+                        var dayCellClass = reservation != null
+                            ? (isSelectedReservationDay
+                                ? "bg-emerald-500/20 border-emerald-500 text-emerald-300"
+                                : "bg-zinc-800 border-zinc-700 text-zinc-500")
+                            : "bg-zinc-900/30 border-zinc-800 text-zinc-400";
+
+                        if (reservation != null)
+                        {
+                            <form method="GET" action="@Url.Action("AdminPanel", "Admin")" style="display:inline;">
+                                <input type="hidden" name="tab" value="bookings">
+                                <input type="hidden" name="selectedCalendarCar" value="@selectedCalendarCar">
+                                <input type="hidden" name="selectedReservationId" value="@reservation.id">
+                                <input type="hidden" name="calendarSearch" value="@calendarSearch">
+                                <input type="hidden" name="calendarPage" value="@currentCalendarPage">
+                                <input type="hidden" name="currentMonth" value="@currentMonth">
+                                <input type="hidden" name="currentYear" value="@currentYear">
+                                <button type="submit" class="w-full aspect-square rounded-2xl flex flex-col items-center justify-center border transition-all relative group/day @dayCellClass">
+                                    <span class="text-xs font-bold">@day</span>
+                                    <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-64 bg-zinc-900 border border-zinc-800 p-6 rounded-3xl shadow-2xl opacity-0 invisible group-hover/day:opacity-100 group-hover/day:visible transition-all z-50 pointer-events-none text-left">
+                                        <p class="text-[10px] text-emerald-500 font-bold uppercase tracking-widest mb-2">REZERVASYON BILGISI</p>
+                                        <div class="space-y-3">
+                                            <div>
+                                                <p class="text-[9px] text-zinc-500 font-bold uppercase tracking-widest">MUSTERI</p>
+                                                <p class="text-sm text-white font-bold">@reservation.user</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-[9px] text-zinc-500 font-bold uppercase tracking-widest">E-POSTA</p>
+                                                <p class="text-xs text-zinc-400">@reservation.email</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-[9px] text-zinc-500 font-bold uppercase tracking-widest">TELEFON</p>
+                                                <p class="text-xs text-zinc-400">@reservation.phone</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="aspect-square rounded-2xl flex flex-col items-center justify-center border transition-all relative group/day @dayCellClass">
+                                <span class="text-xs font-bold">@day</span>
+                            </div>
+                        }
+                    }
+                </div>
+
+                <div class="pt-10 border-t border-zinc-800 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Baslangic Tarihi</p>
+                        <p class="text-xl font-display font-bold text-white">@(selectedReservation != null ? ((DateTime)selectedReservation.startDateValue).ToString("dd MMMM yyyy") : "-")</p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Bitis Tarihi</p>
+                        <p class="text-xl font-display font-bold text-white">@(selectedReservation != null ? ((DateTime)selectedReservation.endDateValue).ToString("dd MMMM yyyy") : "-")</p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Toplam Sure</p>
+                        <p class="text-xl font-display font-bold text-white">@(selectedReservation != null ? $"{(int)selectedReservation.totalDays} Gun" : "-")</p>
+                    </div>
+                </div>
+
+                <div class="mt-12 p-8 bg-zinc-900 border border-zinc-800 rounded-[2rem] flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="text-center md:text-left">
+                        <p class="text-zinc-500 text-xs font-bold uppercase tracking-[0.3em] mb-1">Odeme Ozeti</p>
+                        <p class="text-white text-sm">Gunluk @selectedCalendarCarInfo.price x @(selectedReservation != null ? (int)selectedReservation.totalDays : 0) Gun</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-1">Toplam Tutar</p>
+                        <p class="text-4xl font-display font-bold text-white">@(selectedReservation != null ? $"{(decimal)selectedReservation.amountValue:N0} TL" : "0 TL")</p>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="py-20 flex flex-col items-center justify-center text-center space-y-4">
+                <div class="w-16 h-16 rounded-2xl bg-zinc-900 flex items-center justify-center text-zinc-700">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 13l1-2h16l1 2m-1 0v5a1 1 0 01-1 1h-1m-14 0H4a1 1 0 01-1-1v-5m18 0l-1.293-3.293a1 1 0 00-.894-.707H5.187a1 1 0 00-.894.707L3 13m3 6v-2m12 2v-2"></path>
+                    </svg>
+                </div>
+                <p class="text-zinc-500 text-sm font-bold uppercase tracking-widest">Takvimi goruntulemek icin yukaridan bir arac secin.</p>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,67 @@
+@model Rentova.UI.Models.AccountMenu.AccountMenuPageViewModel
+
+<section id="accountTabSettings" class="account-tab-panel" data-tab-panel="settings">
+    <div class="account-panel-head">
+        <h2 class="account-panel-title">Hesabi Guncelle</h2>
+    </div>
+
+    <div class="account-settings-card">
+        <form id="accountSettingsForm" class="account-settings-grid" method="post" action="@Url.Action("UpdateUser", "Login")" novalidate>
+            <input type="hidden" name="AppUserId" value="@Model.UserId" />
+            <input type="hidden" name="Password" value="" />
+            <label class="account-field">
+                <span>Ad</span>
+                <input id="accountFirstName" name="FirstName" type="text" autocomplete="given-name" placeholder="Ad" value="@Model.FirstName" required />
+            </label>
+
+            <label class="account-field">
+                <span>Soyad</span>
+                <input id="accountLastName" name="LastName" type="text" autocomplete="family-name" placeholder="Soyad" value="@Model.LastName" required />
+            </label>
+
+            <label class="account-field">
+                <span>E-posta</span>
+                <input id="accountEmail" name="Email" type="email" autocomplete="email" placeholder="E-posta" value="@Model.Email" required />
+            </label>
+
+            <label class="account-field">
+                <span>Telefon</span>
+                <input id="accountPhone" name="PhoneNumber" type="tel" autocomplete="tel" placeholder="Telefon" value="@Model.PhoneNumber" />
+            </label>
+        </form>
+
+        <div class="account-settings-actions">
+            <button type="submit" form="accountSettingsForm" id="accountSaveBtn" class="account-primary-btn">Degisiklikleri Kaydet</button>
+        </div>
+
+        <p id="accountProfileMessage" class="account-inline-message @(string.IsNullOrWhiteSpace(Model.ProfileFeedback) ? string.Empty : (Model.IsProfileFeedbackError ? "is-error" : "is-success"))" aria-live="polite">@Model.ProfileFeedback</p>
+    </div>
+
+    <div class="account-settings-card mt-6">
+        <h3 class="account-subsection-title">Sifre Degistir</h3>
+        <form id="accountPasswordForm" class="account-settings-grid mt-4" method="post" action="@Url.Action("ChangePassword", "Login")" novalidate>
+            <input type="hidden" name="appUserId" value="@Model.UserId" />
+
+            <label class="account-field">
+                <span>Mevcut Sifre</span>
+                <input name="currentPassword" type="password" autocomplete="current-password" placeholder="Mevcut sifreniz" required />
+            </label>
+
+            <label class="account-field">
+                <span>Yeni Sifre</span>
+                <input name="newPassword" type="password" autocomplete="new-password" placeholder="Yeni sifreniz" required />
+            </label>
+
+            <label class="account-field">
+                <span>Yeni Sifre Tekrar</span>
+                <input name="confirmNewPassword" type="password" autocomplete="new-password" placeholder="Yeni sifreyi tekrar girin" required />
+            </label>
+        </form>
+
+        <div class="account-settings-actions">
+            <button type="submit" form="accountPasswordForm" class="account-primary-btn">Sifreyi Guncelle</button>
+        </div>
+
+        <p class="account-inline-message @(string.IsNullOrWhiteSpace(Model.PasswordFeedback) ? string.Empty : (Model.IsPasswordFeedbackError ? "is-error" : "is-success"))" aria-live="polite">@Model.PasswordFeedback</p>
+    </div>
+</section>

@@ -1,0 +1,65 @@
+@using Rentova.UI.Dtos.CarDtos
+@model List<CarGetAllDto>
+
+<div id="productCarGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+    @if (Model != null && Model.Any())
+    {
+        foreach (var car in Model)
+        {
+            <div class="group bg-white rounded-[2rem] border border-brand-gray/30 overflow-hidden hover:shadow-xl transition-all duration-500 car-item" 
+                 data-car-id="@car.CarId"
+                 data-brand="@car.BrandName" 
+                 data-category="@car.VehicleTypeName" 
+                 data-transmission="@car.TransmissionTypeName" 
+                 data-fuel="@car.FuelTypeName" 
+                 data-seats="@car.SeatCountName"
+                 data-price="@car.DailyPrice"
+                 data-model="@car.CarModel">
+                <div class="relative aspect-[16/10] overflow-hidden">
+                    <a href="/Reservation/Index?carId=@car.CarId" class="block w-full h-full" aria-label="@car.CarModel için rezervasyon sayfasına git">
+                        <img src="@car.CarImage" alt="@car.CarModel" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                    </a>
+                    <div class="absolute top-4 left-4">
+                        <span class="px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-[9px] font-bold uppercase tracking-wider border border-brand-gray/20">@car.VehicleTypeName</span>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="mb-4">
+                        <p class="text-[10px] font-bold text-brand-anthracite/40 uppercase tracking-widest mb-1">@car.BrandName</p>
+                        <h3 class="text-xl font-display font-bold truncate">@car.CarModel</h3>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 mb-4">
+                        <div class="flex items-center gap-1.5 text-[8px] font-bold text-brand-anthracite/40 uppercase">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22L17 22L17 11L13 7L13 2L4 2L4 7L3 11L3 22Z"/><path d="M13 11L17 11"/><path d="M4 11L8 11"/></svg> @car.FuelTypeName
+                        </div>
+                        <div class="flex items-center gap-1.5 text-[8px] font-bold text-brand-anthracite/40 uppercase">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> @car.TransmissionTypeName
+                        </div>
+                        <div class="flex items-center gap-1.5 text-[8px] font-bold text-brand-anthracite/40 uppercase">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> @car.SeatCountName
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-end pt-4 border-t border-brand-gray/20">
+                        <div>
+                            <p class="text-lg font-display font-bold">@car.DailyPrice.ToString("N0") TL</p>
+                            <p class="text-[9px] font-bold text-brand-anthracite/40 uppercase tracking-widest">/ Gün</p>
+                        </div>
+                        <a href="/Reservation/Index?carId=@car.CarId" class="p-3 bg-brand-light group-hover:bg-brand-black group-hover:text-white rounded-xl transition-all" aria-label="Aracı rezerve et">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@* Pagination *@
+<div id="productPagination" class="flex justify-center items-center gap-4">
+    @* Populated by JS for dynamic filtering *@
+</div>
+
+<div id="noResults" class="py-20 text-center hidden">
+    <p class="text-brand-anthracite/40 text-lg font-medium">Aradığınız kriterlere uygun araç bulunamadı.</p>
+</div>
+

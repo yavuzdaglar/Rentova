@@ -1,0 +1,55 @@
+# ===== Build outputs =====
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.user
+
+# ===== Visual Studio =====
+.vs/
+.vscode/
+*.suo
+*.userosscache
+*.sln.docstates
+*.nupkg
+*.snupkg
+
+# ===== IDE / Editor =====
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ===== NuGet =====
+*.nupkg
+*.snupkg
+packages/
+
+# ===== Local build artifacts =====
+build_output.txt
+build_error.txt
+
+# ===== Node / React frontends =====
+node_modules/
+dist/
+*.tsbuildinfo
+
+# ===== Environment files (keep .env.example) =====
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ===== Logs =====
+*.log
+logs/
+
+# ===== Test results =====
+TestResults/
+*.coverage
+
+# ===== Database =====
+*.mdf
+*.ldf

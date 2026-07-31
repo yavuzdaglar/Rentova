@@ -1,0 +1,25 @@
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-brand-gray/30 h-20 flex items-center px-6">
+    <div class="max-w-7xl mx-auto w-full flex items-center justify-between relative">
+        <button onclick="window.history.back()"
+                class="w-12 h-12 rounded-full border border-brand-gray/30 flex items-center justify-center hover:bg-brand-light transition-all">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        </button>
+        
+        <h1 class="text-3xl md:text-4xl font-display font-bold tracking-tighter absolute left-1/2 -translate-x-1/2">
+            RENTOVA<span class="text-brand-anthracite">.</span>
+        </h1>
+
+        <div class="flex items-center gap-4 ml-auto">
+            <div id="authButtons" class="flex items-center">
+                <a href="/Login" class="px-5 py-2.5 bg-brand-black text-white rounded-full text-sm font-medium hover:bg-brand-anthracite transition-all">Giriş Yap</a>
+            </div>
+            <div id="userInfo" class="hidden items-center gap-4">
+                @await Component.InvokeAsync("_AccountMenu")
+                <span id="userName" class="text-sm font-bold text-brand-black"></span>
+                <button onclick="handleLogout()" class="px-4 py-2 bg-red-600 text-white rounded-full text-xs font-bold hover:bg-red-700 transition-all">
+                    Çıkış Yap
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>

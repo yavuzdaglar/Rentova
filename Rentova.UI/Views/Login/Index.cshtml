@@ -1,0 +1,39 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rentova - Giriş Yap / Kayıt Ol</title>
+    <link rel="stylesheet" href="~/css/main.css" />
+    <link rel="stylesheet" href="~/css/login.css" />
+    <link rel="stylesheet" href="~/css/theme-toggle.css" />
+    <script>
+        (function () {
+            try {
+                var savedTheme = localStorage.getItem('rentova-theme');
+                document.documentElement.setAttribute('data-theme', savedTheme === 'light' ? 'light' : 'dark');
+            } catch (_error) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+</head>
+<body class="bg-brand-light text-brand-black font-sans antialiased selection:bg-brand-black selection:text-white relative overflow-hidden">
+    
+    @await Component.InvokeAsync("_LoginNavbar")
+
+    <main class="min-h-screen flex flex-col items-center justify-center p-6 relative z-10">
+        @await Component.InvokeAsync("_LoginContent")
+    </main>
+
+    @await Component.InvokeAsync("_LoginFooter")
+
+    <script src="~/js/theme-toggle.js"></script>
+    <script src="~/js/login.js"></script>
+</body>
+</html>

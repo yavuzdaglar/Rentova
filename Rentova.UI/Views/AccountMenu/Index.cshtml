@@ -1,0 +1,53 @@
+@model Rentova.UI.Models.AccountMenu.AccountMenuPageViewModel
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rentova - AccountMenu</title>
+    <link rel="stylesheet" href="~/css/main.css" />
+    <link rel="stylesheet" href="~/css/account-menu.css" />
+    <link rel="stylesheet" href="~/css/theme-toggle.css" />
+    <link rel="stylesheet" href="~/css/ai-chat.css" />
+    <script>
+        (function () {
+            try {
+                var savedTheme = localStorage.getItem('rentova-theme');
+                document.documentElement.setAttribute('data-theme', savedTheme === 'light' ? 'light' : 'dark');
+            } catch (_error) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+</head>
+<body class="account-shell">
+    @if (Model.IsAdmin == true)
+    {
+        <div class="account-admin-floating">
+            <a href="@Url.Action("AdminPanel", "Admin")"
+               class="account-admin-floating-btn">
+                Admin Panel
+            </a>
+        </div>
+    }
+
+    <div class="account-layout">
+        @await Component.InvokeAsync("_AccountMenuSidebar", Model)
+
+        <main class="account-layout-main">
+            @await Component.InvokeAsync("_AccountMenuReservations", Model)
+            @await Component.InvokeAsync("_AccountMenuMessages", Model)
+            @await Component.InvokeAsync("_AccountMenuSettings", Model)
+        </main>
+    </div>
+
+    <script src="~/js/auth.js"></script>
+    <script src="~/js/theme-toggle.js"></script>
+    <script src="~/js/ai-chat.js"></script>
+    <script src="~/js/account-menu.js"></script>
+</body>
+</html>

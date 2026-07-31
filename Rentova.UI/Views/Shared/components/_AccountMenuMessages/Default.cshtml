@@ -1,0 +1,103 @@
+@model Rentova.UI.Models.AccountMenu.AccountMenuPageViewModel
+
+<section id="accountTabMessages"
+         class="account-tab-panel"
+         data-tab-panel="messages"
+         data-send-message-url="@Url.Action("SendMessage", "Message")">
+    <div class="account-panel-head">
+        <h2 class="account-panel-title">Mesajlar</h2>
+        <button type="button" id="accountMessagesBackBtn" class="account-back-btn is-hidden">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            Geri Don
+        </button>
+    </div>
+
+    <p class="account-warning-note">
+        Bilgilendirme: Eski veya iptal edilmis rezervasyonlara ait mesajlar belirli bir sure sonra sistemden kaldirilabilir.
+    </p>
+
+    <div id="accountMessagesMaster" class="account-messages-master">
+        <form class="account-message-compose" method="post" action="@Url.Action("SendMessage", "Message")">
+            <h3 class="account-subsection-title">Yeni Mesaj Gonder</h3>
+            <input type="hidden" name="AppUserId" value="@Model.UserId" />
+            <input id="accountMessageTitleInput" name="Title" type="text" class="account-input" placeholder="Mesaj Basligi" required />
+            <textarea id="accountMessageContentInput" name="Content" class="account-textarea" rows="4" placeholder="Mesajiniz..." required></textarea>
+            <button type="submit" id="accountMessageSendBtn" class="account-primary-btn">Gonder</button>
+            @if (!string.IsNullOrWhiteSpace(Model.MessageFeedback))
+            {
+                <p class="account-inline-message is-success" aria-live="polite">@Model.MessageFeedback</p>
+            }
+        </form>
+
+        <div id="accountMessagesList" class="account-message-list">
+            @if (!Model.Messages.Any())
+            {
+                <div class="account-empty">Henuz mesajiniz bulunmuyor.</div>
+            }
+            else
+            {
+                foreach (var message in Model.Messages.OrderByDescending(x => x.CreatedDate))
+                {
+                    var content = message.Content ?? string.Empty;
+                    var rawStatus = (message.Status ?? string.Empty).Trim();
+                    var statusCode = "pending";
+                    var statusLabel = string.IsNullOrWhiteSpace(rawStatus) ? "Cevap Bekleniyor" : rawStatus;
+
+                    if (rawStatus.Contains("toks", StringComparison.OrdinalIgnoreCase))
+                    {
+                        statusCode = "toxic";
+                        statusLabel = "Toksik";
+                    }
+                    else if (rawStatus.Contains("cevapland", StringComparison.OrdinalIgnoreCase) ||
+                             rawStatus.Contains("yanitland", StringComparison.OrdinalIgnoreCase) ||
+                             rawStatus.Contains("yan\u0131tland", StringComparison.OrdinalIgnoreCase))
+                    {
+                        statusCode = "answered";
+                        statusLabel = "Cevaplandi";
+                    }
+                    else if (rawStatus.Contains("beklen", StringComparison.OrdinalIgnoreCase) ||
+                             rawStatus.Contains("pending", StringComparison.OrdinalIgnoreCase))
+                    {
+                        statusCode = "pending";
+                        statusLabel = "Cevap Bekleniyor";
+                    }
+
+                    <button type="button"
+                            class="account-message-item"
+                            data-message-id="@message.MessageId"
+                            data-message-title="@message.Title"
+                            data-message-content="@message.Content"
+                            data-message-reply="@message.Reply"
+                            data-message-status-code="@statusCode"
+                            data-message-created-at="@message.CreatedDate.ToString("o")">
+                        <div class="account-message-item-left">
+                            <span class="account-message-state-icon is-@statusCode" aria-hidden="true">@statusLabel.Substring(0, 1)</span>
+                            <div class="account-message-item-text">
+                                <h3 class="account-message-item-title">@message.Title</h3>
+                                <p class="account-message-item-content">@(content.Length > 100 ? content[..97] + "..." : content)</p>
+                            </div>
+                        </div>
+                        <div class="account-message-item-right">
+                            <span class="account-message-status is-@statusCode">@statusLabel</span>
+                            <span class="account-message-arrow" aria-hidden="true">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </span>
+                        </div>
+                    </button>
+                }
+            }
+        </div>
+    </div>
+
+    <div id="accountMessagesDetail" class="account-messages-detail is-hidden">
+        <div class="account-message-detail-head">
+            <h3 id="accountMessageDetailTitle" class="account-message-detail-title"></h3>
+            <p id="accountMessageDetailDate" class="account-message-detail-date"></p>
+        </div>
+        <div id="accountMessageThread" class="account-message-thread"></div>
+    </div>
+</section>

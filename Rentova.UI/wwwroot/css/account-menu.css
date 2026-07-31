@@ -1,0 +1,1013 @@
+.account-menu-trigger {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(45, 45, 45, 0.2);
+    color: #2d2d2d;
+    background: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.account-menu-trigger:hover {
+    background: #000000;
+    color: #ffffff;
+    border-color: #000000;
+    transform: translateY(-1px);
+}
+
+.account-shell {
+    min-height: 100vh;
+    background: #f8f8f8;
+    color: #000000;
+    overflow-x: hidden;
+}
+
+.account-admin-floating {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.25rem;
+    z-index: 60;
+}
+
+.account-admin-floating-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.62rem 1rem;
+    border-radius: 9999px;
+    border: 1px solid #dc2626;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    box-shadow: 0 12px 26px rgba(220, 38, 38, 0.28);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.account-admin-floating-btn:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(220, 38, 38, 0.34);
+}
+
+.account-layout {
+    min-height: 100vh;
+    display: flex;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.account-layout-sidebar {
+    width: 20rem;
+    background: #ffffff;
+    border-right: 1px solid rgba(45, 45, 45, 0.1);
+    padding: 2.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.account-brand {
+    font-family: "Space Grotesk", "Inter", sans-serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+}
+
+.account-brand span {
+    color: #2d2d2d;
+}
+
+.account-user-card {
+    border: 1px solid rgba(45, 45, 45, 0.12);
+    border-radius: 1.2rem;
+    padding: 0.9rem 1rem;
+    background: #f8f8f8;
+}
+
+.account-user-name {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #000000;
+}
+
+.account-user-email {
+    margin: 0.3rem 0 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(45, 45, 45, 0.55);
+    word-break: break-word;
+}
+
+.account-tab-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.account-tab-btn {
+    width: 100%;
+    border: none;
+    border-radius: 1rem;
+    background: transparent;
+    color: rgba(45, 45, 45, 0.55);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+}
+
+.account-tab-btn:hover {
+    background: #f8f8f8;
+    color: #000000;
+}
+
+.account-tab-btn.is-active {
+    background: #000000;
+    color: #ffffff;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+}
+
+.account-tab-icon {
+    width: 1.35rem;
+    height: 1.35rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.account-logout-link {
+    margin-top: auto;
+    border: none;
+    background: transparent;
+    color: #cf2020;
+    border-radius: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.account-logout-link:hover {
+    background: #fff0f0;
+}
+
+.account-layout-main {
+    flex: 1;
+    padding: 3rem 3.5rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-width: 0;
+}
+
+.account-layout-main * {
+    box-sizing: border-box;
+}
+
+.account-tab-panel {
+    display: none;
+    max-width: 72rem;
+    width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+    animation: account-fade-in 0.22s ease;
+}
+
+.account-tab-panel.is-active {
+    display: block;
+}
+
+@keyframes account-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.account-panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.account-panel-title {
+    margin: 0;
+    font-family: "Space Grotesk", "Inter", sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+}
+
+.account-warning-note {
+    margin: 0 0 1rem;
+    padding: 0.75rem 0.9rem;
+    border-radius: 0.8rem;
+    border: 1px solid #ff5a5a;
+    background: #fff1f1;
+    color: #c21717;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+}
+
+.account-count-badge {
+    border: 1px solid rgba(45, 45, 45, 0.12);
+    background: #ffffff;
+    border-radius: 9999px;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(45, 45, 45, 0.55);
+    white-space: nowrap;
+}
+
+.account-inline-message {
+    min-height: 1.3rem;
+    margin: 0 0 0.8rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.account-inline-message.is-error {
+    color: #c32727;
+}
+
+.account-inline-message.is-success {
+    color: #0c8b50;
+}
+
+.account-delete-confirm-toast {
+    position: fixed;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1200;
+    background: #ffffff;
+    border: 1px solid rgba(45, 45, 45, 0.15);
+    border-radius: 1rem;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18);
+    padding: 0.9rem 1rem;
+    min-width: min(92vw, 34rem);
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.account-delete-confirm-toast.is-open {
+    display: flex;
+}
+
+.account-delete-confirm-text {
+    margin: 0;
+    font-size: 0.83rem;
+    font-weight: 700;
+    color: #1b1b1b;
+}
+
+.account-delete-confirm-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.account-delete-confirm-btn {
+    border: none;
+    border-radius: 0.7rem;
+    padding: 0.55rem 0.8rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.account-delete-confirm-btn.yes {
+    background: #d62828;
+    color: #ffffff;
+}
+
+.account-delete-confirm-btn.no {
+    background: #f1f1f1;
+    color: #222222;
+}
+
+.account-reservation-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.account-reservation-card {
+    background: #ffffff;
+    border: 1px solid rgba(45, 45, 45, 0.1);
+    border-radius: 2rem;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    transition: all 0.2s ease;
+}
+
+.account-reservation-card:hover {
+    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.1);
+}
+
+.account-reservation-card.is-past {
+    opacity: 0.55;
+    filter: grayscale(1);
+}
+
+.account-reservation-image-wrap {
+    width: 13rem;
+    border-radius: 1.2rem;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.account-reservation-image {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    aspect-ratio: 16 / 9;
+}
+
+.account-reservation-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.account-reservation-top {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+}
+
+.account-reservation-name {
+    margin: 0;
+    font-family: "Space Grotesk", "Inter", sans-serif;
+    font-size: 1.25rem;
+    line-height: 1.2;
+}
+
+.account-status-badge {
+    border-radius: 9999px;
+    padding: 0.28rem 0.65rem;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+}
+
+.account-status-active {
+    background: #d5f9e4;
+    color: #077845;
+}
+
+.account-status-completed {
+    background: #efefef;
+    color: rgba(45, 45, 45, 0.6);
+}
+
+.account-status-upcoming {
+    background: #fff2d6;
+    color: #9a6a03;
+}
+
+.account-reservation-meta {
+    margin-top: 0.6rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 0.66rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(45, 45, 45, 0.48);
+}
+
+.account-reservation-actions {
+    display: flex;
+    gap: 0.55rem;
+}
+
+.account-icon-btn {
+    border: none;
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.account-icon-btn.delete {
+    background: #ffecec;
+    color: #d62828;
+}
+
+.account-icon-btn.delete:hover {
+    background: #d62828;
+    color: #ffffff;
+}
+
+.account-icon-btn.go {
+    background: #f0f0f0;
+    color: #000000;
+}
+
+.account-icon-btn.go:hover {
+    background: #000000;
+    color: #ffffff;
+}
+
+.account-empty {
+    background: #ffffff;
+    border: 1px dashed rgba(45, 45, 45, 0.2);
+    border-radius: 1.4rem;
+    padding: 1.5rem;
+    text-align: center;
+    font-size: 0.92rem;
+    color: rgba(45, 45, 45, 0.6);
+}
+
+.account-messages-master {
+    display: grid;
+    gap: 1rem;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.account-message-compose {
+    background: #ffffff;
+    border: 1px solid rgba(45, 45, 45, 0.1);
+    border-radius: 2rem;
+    padding: 1.5rem;
+    display: grid;
+    gap: 0.8rem;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.account-message-compose > * {
+    min-width: 0;
+}
+
+.account-subsection-title {
+    margin: 0;
+    font-family: "Space Grotesk", "Inter", sans-serif;
+    font-size: 1.2rem;
+}
+
+.account-input,
+.account-textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+    border: 1px solid rgba(45, 45, 45, 0.16);
+    border-radius: 0.95rem;
+    padding: 0.9rem 1rem;
+    background: #f8f8f8;
+    font-size: 0.92rem;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    font-family: inherit;
+    word-break: break-word;
+}
+
+.account-textarea {
+    resize: vertical;
+    overflow-wrap: anywhere;
+}
+
+.account-input:focus,
+.account-textarea:focus {
+    border-color: #000000;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
+}
+
+.account-primary-btn {
+    border: none;
+    border-radius: 0.95rem;
+    background: #000000;
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.9rem 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.account-primary-btn:hover {
+    background: #242424;
+}
+
+.account-primary-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+
+.account-primary-btn.is-loading {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.account-primary-btn.is-loading::after {
+    content: '';
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #ffffff;
+    animation: accountButtonSpin 0.7s linear infinite;
+}
+
+@keyframes accountButtonSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.account-message-compose .account-primary-btn {
+    width: auto;
+    min-width: 9.5rem;
+    justify-self: flex-start;
+}
+
+.mt-4 {
+    margin-top: 1rem;
+}
+
+.mt-6 {
+    margin-top: 1.5rem;
+}
+
+.account-message-list {
+    display: grid;
+    gap: 0.75rem;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.account-message-item {
+    border: none;
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid rgba(45, 45, 45, 0.1);
+    border-radius: 1.6rem;
+    padding: 1rem 1.15rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.account-message-item:hover {
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.08);
+}
+
+.account-message-item-left {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    min-width: 0;
+}
+
+.account-message-state-icon {
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.account-message-state-icon.is-answered {
+    background: #d5f9e4;
+    color: #0c8b50;
+}
+
+.account-message-state-icon.is-pending {
+    background: #fff2d6;
+    color: #9a6a03;
+}
+
+.account-message-state-icon.is-toxic {
+    background: #ffe5e5;
+    color: #d62828;
+}
+
+.account-message-item-text {
+    min-width: 0;
+}
+
+.account-message-item-title {
+    margin: 0;
+    font-family: "Space Grotesk", "Inter", sans-serif;
+    font-size: 1rem;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.account-message-item-content {
+    margin: 0.2rem 0 0;
+    font-size: 0.78rem;
+    color: rgba(45, 45, 45, 0.55);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    min-width: 0;
+}
+
+.account-message-item-right {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.account-message-status {
+    border-radius: 9999px;
+    padding: 0.28rem 0.55rem;
+    font-size: 0.54rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.account-message-status.is-answered {
+    background: #e8fff1;
+    color: #0c8b50;
+}
+
+.account-message-status.is-pending {
+    background: #fff2d6;
+    color: #9a6a03;
+}
+
+.account-message-status.is-toxic {
+    background: #ffe5e5;
+    color: #d62828;
+}
+
+.account-message-arrow {
+    color: rgba(45, 45, 45, 0.28);
+}
+
+.account-messages-detail {
+    background: #ffffff;
+    border: 1px solid rgba(45, 45, 45, 0.1);
+    border-radius: 2rem;
+    padding: 1.35rem;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+}
+
+.account-message-detail-head,
+.account-message-thread,
+.account-thread-row,
+.account-thread-bubble,
+.account-thread-text {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.account-message-detail-head {
+    border-bottom: 1px solid rgba(45, 45, 45, 0.09);
+    padding-bottom: 0.85rem;
+}
+
+.account-message-detail-title {
+    margin: 0;
+    font-family: "Space Grotesk", "Inter", sans-serif;
+    font-size: 1.35rem;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.account-message-detail-date {
+    margin: 0.35rem 0 0;
+    font-size: 0.67rem;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: rgba(45, 45, 45, 0.45);
+}
+
+.account-message-thread {
+    margin-top: 1rem;
+    max-height: 23rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: grid;
+    gap: 0.8rem;
+    min-width: 0;
+}
+
+.account-thread-row {
+    display: flex;
+}
+
+.account-thread-row.from-user {
+    justify-content: flex-end;
+}
+
+.account-thread-bubble {
+    max-width: 80%;
+    border-radius: 1.2rem;
+    padding: 0.85rem 0.95rem;
+    background: #f2f2f2;
+    min-width: 0;
+}
+
+.account-thread-row.from-user .account-thread-bubble {
+    background: #000000;
+    color: #ffffff;
+}
+
+.account-thread-sender {
+    margin: 0 0 0.25rem;
+    font-size: 0.56rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.6;
+}
+
+.account-thread-text {
+    margin: 0;
+    font-size: 0.84rem;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.account-thread-time {
+    margin: 0.35rem 0 0;
+    text-align: right;
+    font-size: 0.58rem;
+    opacity: 0.5;
+}
+
+.account-back-btn {
+    border: none;
+    background: transparent;
+    color: rgba(45, 45, 45, 0.65);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.account-back-btn:hover {
+    color: #000000;
+}
+
+.account-settings-card {
+    background: #ffffff;
+    border: 1px solid rgba(45, 45, 45, 0.1);
+    border-radius: 2rem;
+    padding: 1.35rem;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.account-settings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+}
+
+.account-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 0;
+}
+
+.account-field span {
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: rgba(45, 45, 45, 0.5);
+}
+
+.account-field input {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    border: 1px solid rgba(45, 45, 45, 0.16);
+    border-radius: 0.95rem;
+    background: #f8f8f8;
+    padding: 0.85rem 1rem;
+    font-size: 0.92rem;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.account-field input:focus {
+    border-color: #000000;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
+}
+
+.account-settings-actions {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.account-settings-actions .account-primary-btn,
+.account-message-compose .account-primary-btn {
+    max-width: 100%;
+    white-space: normal;
+}
+
+.is-hidden {
+    display: none !important;
+}
+
+@media (max-width: 1200px) {
+    .account-layout-main {
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .account-layout {
+        flex-direction: column;
+    }
+
+    .account-layout-sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid rgba(45, 45, 45, 0.1);
+        padding: 1.25rem;
+    }
+
+    .account-tab-list {
+        flex-direction: row;
+        overflow-x: auto;
+    }
+
+    .account-tab-btn {
+        width: auto;
+        white-space: nowrap;
+    }
+
+    .account-logout-link {
+        margin-top: 0.2rem;
+        width: fit-content;
+    }
+
+    .account-layout-main {
+        padding: 1.25rem;
+    }
+
+    .account-reservation-card {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .account-reservation-image-wrap {
+        width: 100%;
+    }
+
+    .account-reservation-actions {
+        justify-content: flex-end;
+    }
+
+    .account-message-item {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .account-message-item-right {
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .account-message-item-content {
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+}
+
+@media (max-width: 640px) {
+    .account-admin-floating {
+        top: 0.75rem;
+        right: 0.75rem;
+    }
+
+    .account-admin-floating-btn {
+        font-size: 0.65rem;
+        padding: 0.52rem 0.8rem;
+    }
+
+    .account-delete-confirm-toast {
+        top: 0.75rem;
+        min-width: calc(100vw - 1rem);
+        left: 0.5rem;
+        right: 0.5rem;
+        transform: none;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .account-delete-confirm-actions {
+        justify-content: flex-end;
+    }
+
+    .account-settings-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .account-settings-card {
+        padding: 1rem;
+        border-radius: 1.35rem;
+    }
+
+    .account-message-compose,
+    .account-messages-detail {
+        padding: 1rem;
+        border-radius: 1.35rem;
+    }
+
+    .account-panel-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .account-count-badge {
+        white-space: normal;
+    }
+
+    .account-thread-bubble {
+        max-width: 95%;
+    }
+}

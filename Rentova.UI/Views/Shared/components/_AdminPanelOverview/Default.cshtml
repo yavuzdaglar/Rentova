@@ -1,0 +1,83 @@
+@using System.Collections.Generic
+@{
+    var mockBookings = ViewBag.MockBookings ?? new List<dynamic>();
+    var latestBookings = ((IEnumerable<dynamic>)mockBookings).Take(10).ToList();
+}
+
+<div class="space-y-12">
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        @{
+            var stats = new List<dynamic> {
+                new { label = "Mesajlar", value = (ViewBag.PendingMessageCount ?? 0).ToString(), color = "text-amber-500", bg = "bg-amber-500/10" },
+                new { label = "Araba Sayisi", value = (ViewBag.ActiveCarCount ?? 0).ToString(), color = "text-emerald-500", bg = "bg-emerald-500/10" },
+                new { label = "Rezervasyon Sayisi", value = (ViewBag.ReservationCount ?? 0).ToString(), color = "text-blue-500", bg = "bg-blue-500/10" },
+                new { label = "Kullanici Sayisi", value = (ViewBag.UserCount ?? 0).ToString(), color = "text-violet-500", bg = "bg-violet-500/10" }
+            };
+        }
+        
+        @foreach(var stat in stats) {
+            <div class="bg-zinc-950 border border-zinc-800 p-8 rounded-[2.5rem] hover:border-zinc-700 transition-all group">
+                <div class="w-14 h-14 rounded-2xl @stat.bg @stat.color flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-1">@stat.label</p>
+                <h3 class="text-3xl font-display font-black text-white">@stat.value</h3>
+            </div>
+        }
+    </div>
+
+    <!-- Recent Activity Table -->
+    <div class="bg-zinc-950 border border-zinc-800 rounded-[3rem] overflow-hidden">
+        <div class="p-8 border-b border-zinc-800 flex items-center justify-between">
+            <h3 class="text-xl font-display font-bold text-white">Son Rezervasyonlar</h3>
+            <button class="text-xs font-bold text-emerald-500 uppercase tracking-widest hover:underline">Tümünü Gör</button>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest border-b border-zinc-800/50">
+                        <th class="px-8 py-6">Müşteri</th>
+                        <th class="px-8 py-6">Araç</th>
+                        <th class="px-8 py-6">Tarih</th>
+                        <th class="px-8 py-6">Tutar</th>
+                        <th class="px-8 py-6">Durum</th>
+                        <th class="px-8 py-6 text-right">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm">
+                    @foreach(var booking in latestBookings) {
+                        <tr class="border-b border-zinc-800/30 hover:bg-zinc-900/30 transition-colors">
+                            <td class="px-8 py-6 font-bold text-white">@booking.user</td>
+                            <td class="px-8 py-6 text-zinc-400">@booking.car</td>
+                            <td class="px-8 py-6 text-zinc-500 text-xs">@booking.startDate</td>
+                            <td class="px-8 py-6 font-bold text-emerald-500">@booking.amount</td>
+                            <td class="px-8 py-6">
+                                @{
+                                    var statusClass = booking.status == "Aktif" ? "bg-emerald-500/10 text-emerald-500" :
+                                                      booking.status == "Beklemede" ? "bg-amber-500/10 text-amber-500" :
+                                                      "bg-red-500/10 text-red-500 border border-red-500/20";
+                                }
+                                <span class="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full @statusClass">@booking.status</span>
+                            </td>
+                            <td class="px-8 py-6 text-right">
+                                <form method="POST" action="@Url.Action("DeleteReservation", "Admin")" style="display:inline;">
+                                    <input type="hidden" name="reservationId" value="@booking.id">
+                                    <input type="hidden" name="bookingStatus" value="all">
+                                    <input type="hidden" name="bookingPage" value="1">
+                                    <button type="submit" class="p-2 bg-zinc-900 border border-zinc-800 rounded-lg text-zinc-500 hover:text-red-500 transition-all" title="Rezervasyonu sil">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

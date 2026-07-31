@@ -1,0 +1,103 @@
+@using System.Collections.Generic
+@{
+    var admins = ViewBag.Admins ?? new List<dynamic>();
+    var adminSearch = ViewBag.AdminSearch as string ?? string.Empty;
+    var adminPage = (int)(ViewBag.AdminPage ?? 1);
+    var adminTotalPages = (int)(ViewBag.AdminTotalPages ?? 1);
+}
+
+<div class="space-y-12">
+    <div class="bg-zinc-950 border border-zinc-800 rounded-[3rem] p-10">
+        <form method="GET" action="@Url.Action("AdminPanel", "Admin")" class="space-y-4">
+            <input type="hidden" name="tab" value="admins">
+            <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest ml-2">KULLANICI ARA</label>
+            <div class="relative">
+                <svg class="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-500 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <input type="text" name="adminSearch" value="@adminSearch" placeholder="Ad soyad veya e-posta ile ara..."
+                    class="w-full bg-zinc-900 border border-zinc-800 rounded-2xl py-4 pl-12 pr-4 text-sm text-white outline-none focus:border-emerald-500 transition-all" />
+            </div>
+            <button type="submit" class="px-6 py-3 bg-emerald-500 text-black rounded-xl text-xs font-black hover:bg-emerald-400 transition-all">Filtrele</button>
+        </form>
+    </div>
+
+    <!-- Users and Admin Roles -->
+    <div class="bg-zinc-950 border border-zinc-800 rounded-[3rem] overflow-hidden">
+        <div class="p-8 border-b border-zinc-800">
+            <h3 class="text-xl font-display font-bold text-white">Kullanıcı Yetkileri</h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest border-b border-zinc-800/50">
+                        <th class="px-8 py-6">Kullanıcı</th>
+                        <th class="px-8 py-6">E-posta</th>
+                        <th class="px-8 py-6">Yetki</th>
+                        <th class="px-8 py-6 text-right">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm">
+                    @if(admins.Count > 0) {
+                        @foreach(var admin in admins) {
+                            <tr class="border-b border-zinc-800/30 hover:bg-zinc-900/30 transition-colors">
+                                <td class="px-8 py-6 font-bold text-white">@admin.fullName</td>
+                                <td class="px-8 py-6 font-bold text-white">@admin.email</td>
+                                <td class="px-8 py-6">
+                                    @if (admin.isAdmin)
+                                    {
+                                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Admin</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-zinc-700/30 text-zinc-300 border border-zinc-600/30">Admin Değil</span>
+                                    }
+                                </td>
+                                <td class="px-8 py-6 text-right">
+                                    <div class="inline-flex items-center gap-2">
+                                        <form method="POST" action="@Url.Action("ToggleAdmin", "Admin")" style="display:inline;">
+                                            <input type="hidden" name="appUserId" value="@admin.id">
+                                            <input type="hidden" name="makeAdmin" value="true">
+                                            <input type="hidden" name="adminSearch" value="@adminSearch">
+                                            <input type="hidden" name="adminPage" value="@adminPage">
+                                            <button type="submit" class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/10"
+                                                >Admin Yap
+                                            </button>
+                                        </form>
+
+                                        <form method="POST" action="@Url.Action("ToggleAdmin", "Admin")" style="display:inline;">
+                                            <input type="hidden" name="appUserId" value="@admin.id">
+                                            <input type="hidden" name="makeAdmin" value="false">
+                                            <input type="hidden" name="adminSearch" value="@adminSearch">
+                                            <input type="hidden" name="adminPage" value="@adminPage">
+                                            <button type="submit" class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-red-300 border border-red-500/40 hover:bg-red-500/10">
+                                                Adminlikten Cikar
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    } else {
+                        <tr>
+                            <td colspan="4" class="px-8 py-6 text-center text-zinc-500">Aramaya uygun kullanıcı bulunamadı.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if(adminTotalPages > 1) {
+            <div class="p-6 border-t border-zinc-800 flex justify-center gap-2">
+                @for(int i = 1; i <= adminTotalPages; i++) {
+                    <form method="GET" action="@Url.Action("AdminPanel", "Admin")" style="display:inline;">
+                        <input type="hidden" name="tab" value="admins">
+                        <input type="hidden" name="adminSearch" value="@adminSearch">
+                        <input type="hidden" name="adminPage" value="@i">
+                        <button type="submit" class="w-9 h-9 rounded-lg text-xs font-bold transition-all @(adminPage == i ? "bg-emerald-500 text-black" : "bg-zinc-900 text-zinc-500 hover:text-white")">@i</button>
+                    </form>
+                }
+            </div>
+        }
+    </div>
+</div>

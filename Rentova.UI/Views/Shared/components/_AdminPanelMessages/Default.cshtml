@@ -1,0 +1,219 @@
+@using System.Collections.Generic
+@using System.Linq
+@{
+    var mockAdminMessages = ViewBag.MockAdminMessages ?? new List<dynamic>();
+    var selectedMsg = ViewBag.SelectedMessage as dynamic;
+    var msgFilter = ViewBag.MsgFilter as string ?? "all";
+    var msgPage = ViewBag.MsgPage ?? 1;
+    var messageSearch = ViewBag.MessageSearch as string ?? "";
+    var itemsPerPage = 8;
+    
+    var filteredMessages = new List<dynamic>();
+    foreach(dynamic m in mockAdminMessages) {
+        var statusKey = (string?)m.statusKey ?? "pending";
+        var include = msgFilter == "all" || msgFilter == statusKey;
+
+        var searchOk = string.IsNullOrWhiteSpace(messageSearch)
+            || ((string?)m.title ?? string.Empty).Contains(messageSearch, StringComparison.OrdinalIgnoreCase)
+            || ((string?)m.user ?? string.Empty).Contains(messageSearch, StringComparison.OrdinalIgnoreCase)
+            || ((string?)m.content ?? string.Empty).Contains(messageSearch, StringComparison.OrdinalIgnoreCase);
+
+        if(include && searchOk) {
+            filteredMessages.Add(m);
+        }
+    }
+    
+    var msgStartIdx = (int.Parse(msgPage.ToString()) - 1) * itemsPerPage;
+    var pagedMessages = new List<dynamic>();
+    for(int i = msgStartIdx; i < filteredMessages.Count && i < msgStartIdx + itemsPerPage; i++) {
+        pagedMessages.Add(filteredMessages[i]);
+    }
+    
+    var totalPages = Math.Ceiling((double)filteredMessages.Count / itemsPerPage);
+}
+
+<div class="space-y-8">
+    <!-- Selected Message Content & Reply Box -->
+    <div class="bg-zinc-950 border border-zinc-800 rounded-[3rem] p-10 space-y-8">
+        @if(selectedMsg != null) {
+            <div class="space-y-8">
+                <div class="bg-zinc-900/50 p-8 rounded-[2rem] border border-zinc-800/50">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-zinc-900 flex items-center justify-center text-emerald-500">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-display font-bold text-white">@selectedMsg.title</h4>
+                                <div class="flex items-center gap-2">
+                                    <p class="text-xs text-zinc-500 font-bold uppercase tracking-widest">@selectedMsg.user</p>
+                                    <div class="w-1 h-1 rounded-full bg-zinc-700"></div>
+                                    <p class="text-[10px] text-zinc-600 font-medium">@selectedMsg.email • @selectedMsg.phone</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">14:20</span>
+                            <form method="POST" action="@Url.Action("DeleteMessage", "Admin")" style="display:inline;">
+                                <input type="hidden" name="messageId" value="@selectedMsg.id">
+                                <input type="hidden" name="filter" value="@msgFilter">
+                                <input type="hidden" name="msgPage" value="@msgPage">
+                                <input type="hidden" name="messageSearch" value="@messageSearch">
+                                <button type="submit" class="p-3 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-500 hover:text-red-500 transition-all">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <p class="text-sm text-zinc-300 leading-relaxed bg-zinc-950/50 p-6 rounded-2xl border border-zinc-800/30">
+                        @selectedMsg.content
+                    </p>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-display font-bold text-white">Yanıt Gönder</h3>
+                        <div class="flex items-center gap-3">
+                            <button
+                                type="button"
+                                data-admin-ai-reply-button="true"
+                                data-message-title="@selectedMsg.title"
+                                data-message-content="@selectedMsg.content"
+                                data-message-user="@selectedMsg.user"
+                                class="px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest bg-zinc-900 text-emerald-400 border border-emerald-500/30 hover:bg-zinc-800 transition-all">
+                                AI
+                            </button>
+                            <span class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">
+                                Alıcı: @selectedMsg.user
+                            </span>
+                        </div>
+                    </div>
+                    <form method="POST" action="@Url.Action("ReplyMessage", "Admin")" class="space-y-4">
+                        <input type="hidden" name="messageId" value="@selectedMsg.id" />
+                        <input type="hidden" name="filter" value="@msgFilter" />
+                        <input type="hidden" name="msgPage" value="@msgPage" />
+                        <input type="hidden" name="messageSearch" value="@messageSearch" />
+                        <textarea name="replyText" placeholder="@selectedMsg.user kullanıcısına yanıt yazın..."
+                            data-admin-reply-text="true"
+                            rows="10"
+                            class="w-full bg-zinc-900 border border-zinc-800 rounded-[2rem] py-6 px-8 text-sm text-white outline-none focus:border-emerald-500 transition-all resize-none">@selectedMsg.reply</textarea>
+                        <div class="flex justify-end">
+                            <button type="submit" class="flex items-center gap-3 px-12 py-5 bg-emerald-500 text-black rounded-2xl font-black text-sm hover:bg-emerald-400 transition-all shadow-2xl shadow-emerald-500/20">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                </svg>
+                                Yanıtı Gönder
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        } else {
+            <div class="py-20 flex flex-col items-center justify-center text-center space-y-6">
+                <div class="w-24 h-24 rounded-[2rem] bg-zinc-900 flex items-center justify-center text-zinc-700">
+                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-display font-bold text-white mb-2">Mesaj Seçin</h3>
+                    <p class="text-zinc-500 text-sm max-w-xs">İçeriği görüntülemek ve yanıtlamak için aşağıdan bir mesaj seçin.</p>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Inbox with Tabs & Pagination -->
+    <div class="bg-zinc-950 border border-zinc-800 rounded-[3rem] overflow-hidden">
+        <div class="p-8 border-b border-zinc-800 flex flex-col gap-6">
+            <div class="flex gap-4">
+                @{
+                    var filters = new[] { "all", "pending", "answered", "toxic" };
+                    var labels = new[] { "Tümü", "Cevap Bekleniyor", "Cevaplandı", "Toksikler" };
+                }
+                @for(int i = 0; i < filters.Length; i++) {
+                    <form method="GET" action="@Url.Action("AdminPanel", "Admin")" style="display:inline;">
+                        <input type="hidden" name="tab" value="messages">
+                        <input type="hidden" name="filter" value="@filters[i]">
+                        <input type="hidden" name="messageSearch" value="@messageSearch">
+                        <button type="submit" class="px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all @(msgFilter == filters[i] ? (i == 3 ? "bg-red-500/10 text-red-500 border border-red-500/20" : "bg-zinc-900 text-white border border-zinc-700") : "text-zinc-500 hover:text-zinc-300")">
+                            @labels[i]
+                        </button>
+                    </form>
+                }
+            </div>
+            <form method="GET" action="@Url.Action("AdminPanel", "Admin")" class="relative max-w-md">
+                <input type="hidden" name="tab" value="messages">
+                <input type="hidden" name="filter" value="@msgFilter">
+                <input type="text" name="messageSearch" value="@messageSearch" placeholder="Mesaj ara..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl py-3 pl-10 pr-4 text-sm text-white outline-none focus:border-emerald-500" />
+                <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </form>
+        </div>
+
+        <div class="divide-y divide-zinc-800/50">
+            @foreach(var msg in pagedMessages) {
+                <div class="w-full p-8 flex items-start gap-5 transition-all @(selectedMsg?.id == msg.id ? "bg-zinc-900/50" : "hover:bg-zinc-900/30")">
+                    <form method="GET" action="@Url.Action("AdminPanel", "Admin")" class="flex-1 min-w-0" style="display:block;">
+                        <input type="hidden" name="tab" value="messages">
+                        <input type="hidden" name="messageId" value="@msg.id">
+                        <input type="hidden" name="filter" value="@msgFilter">
+                        <input type="hidden" name="messageSearch" value="@messageSearch">
+                        <button type="submit" class="w-full flex items-start gap-8 transition-all text-left group">
+                            <div class="@(((string?)msg.statusKey ?? "pending") == "toxic" ? "w-14 h-14 rounded-2xl bg-red-500/10 border-2 border-red-500 flex items-center justify-center text-red-500" : "w-14 h-14 rounded-2xl bg-zinc-900 flex items-center justify-center text-zinc-500")">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-bold text-white">@msg.title</p>
+                                <p class="text-xs text-zinc-500 mt-1 line-clamp-1">@msg.content</p>
+                                <div class="flex items-center gap-2 mt-3">
+                                    <span class="text-[10px] text-zinc-600 font-bold">@msg.user</span>
+                                </div>
+                            </div>
+                        </button>
+                    </form>
+                    <div class="flex items-center gap-2 flex-shrink-0 pt-1">
+                        @if(((string?)msg.statusKey ?? "pending") == "toxic") {
+                            <span class="text-[10px] bg-red-500/10 text-red-500 px-3 py-1 rounded-full border border-red-500/20">@msg.status</span>
+                        } else if(((string?)msg.statusKey ?? "pending") == "answered") {
+                            <span class="text-[10px] bg-emerald-500/10 text-emerald-500 px-3 py-1 rounded-full border border-emerald-500/20">@msg.status</span>
+                        } else {
+                            <span class="text-[10px] bg-amber-500/10 text-amber-500 px-3 py-1 rounded-full border border-amber-500/20">@msg.status</span>
+                        }
+                        <form method="POST" action="@Url.Action("DeleteMessage", "Admin")" style="display:inline;">
+                            <input type="hidden" name="messageId" value="@msg.id">
+                            <input type="hidden" name="filter" value="@msgFilter">
+                            <input type="hidden" name="msgPage" value="@msgPage">
+                            <input type="hidden" name="messageSearch" value="@messageSearch">
+                            <button type="submit" class="p-2 bg-zinc-900 border border-zinc-800 rounded-lg text-zinc-500 hover:text-red-500 transition-all" title="Mesaji sil">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    @if(totalPages > 1) {
+        <div class="flex justify-center gap-2 pt-4">
+            @for(int i = 1; i <= totalPages; i++) {
+                <form method="GET" action="@Url.Action("AdminPanel", "Admin")" style="display:inline;">
+                    <input type="hidden" name="tab" value="messages">
+                    <input type="hidden" name="filter" value="@msgFilter">
+                    <input type="hidden" name="messageSearch" value="@messageSearch">
+                    <input type="hidden" name="msgPage" value="@i">
+                    <button type="submit" class="w-8 h-8 rounded-lg font-bold text-[10px] transition-all @(int.Parse(msgPage.ToString()) == i ? "bg-emerald-500 text-black" : "bg-zinc-900 text-zinc-500 hover:text-white")">@i</button>
+                </form>
+            }
+        </div>
+    }
+</div>

@@ -1,0 +1,53 @@
+@model Rentova.UI.Models.AccountMenu.AccountMenuPageViewModel
+
+<aside class="account-layout-sidebar">
+    <div class="account-brand">
+        RENTOVA<span>.</span>
+    </div>
+
+    <div class="account-user-card">
+        <p id="accountSidebarFullName" class="account-user-name">@(!string.IsNullOrWhiteSpace(Model.FullName) ? Model.FullName : "Kullanici")</p>
+        <p id="accountSidebarEmail" class="account-user-email">@(!string.IsNullOrWhiteSpace(Model.Email) ? Model.Email : "example@mail.com")</p>
+    </div>
+
+    <div class="account-tab-list">
+        <button type="button" class="account-tab-btn is-active" data-account-tab="reservations">
+            <span class="account-tab-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                    <line x1="2" y1="10" x2="22" y2="10"></line>
+                </svg>
+            </span>
+            Rezervasyonlarim
+        </button>
+
+        <button type="button" class="account-tab-btn" data-account-tab="messages">
+            <span class="account-tab-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </span>
+            Mesajlar
+        </button>
+
+        <button type="button" class="account-tab-btn" data-account-tab="settings">
+            <span class="account-tab-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21a8 8 0 0 0-16 0"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </span>
+            Hesabi Guncelle
+        </button>
+    </div>
+
+    <a href="@Url.Action("Index", "Main")" class="account-logout-link">
+        <span aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5"></path>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+        </span>
+        Geri Gel
+    </a>
+</aside>

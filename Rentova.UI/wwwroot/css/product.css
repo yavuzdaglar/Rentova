@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+/* Font Variables */
+:root {
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Space Grotesk', sans-serif;
+  
+  --color-brand-white: #FFFFFF;
+  --color-brand-light: #F8F8F8;
+  --color-brand-gray: #E5E5E5;
+  --color-brand-anthracite: #2D2D2D;
+  --color-brand-black: #000000;
+}
+
+/* Utilities */
+.font-display { font-family: var(--font-display); }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom Components */
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-primary {
+  background-color: var(--color-brand-black);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+.btn-primary:hover {
+  background-color: var(--color-brand-anthracite);
+  transform: scale(1.05);
+}
+.btn-primary:active {
+  transform: scale(0.95);
+}
+
+.btn-secondary {
+  background-color: var(--color-brand-white);
+  color: var(--color-brand-black);
+  border: 1px solid var(--color-brand-gray);
+  padding: 1rem 2rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+.btn-secondary:hover {
+  background-color: var(--color-brand-light);
+  transform: scale(1.05);
+}
+.btn-secondary:active {
+  transform: scale(0.95);
+}
+
+/* Animations */
+.animate-in {
+  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marquee-reverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+.animate-marquee-reverse {
+  animation: marquee-reverse 40s linear infinite;
+}
+
+.animate-marquee:hover, .animate-marquee-reverse:hover {
+  animation-play-state: paused;
+}
